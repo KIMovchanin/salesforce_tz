@@ -1,0 +1,21 @@
+{
+  "name": "item-purchase-tool",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Salesforce Item Purchase Tool built with Apex, Lightning Web Components, Flow, and SLDS.",
+  "scripts": {
+    "format": "prettier --write \"**/*.{cls,css,html,js,json,md,xml}\"",
+    "format:verify": "prettier --check \"**/*.{cls,css,html,js,json,md,xml}\"",
+    "lint": "eslint force-app/main/default/lwc/**/*.js",
+    "test:unit": "sfdx-lwc-jest",
+    "test:unit:coverage": "sfdx-lwc-jest --coverage"
+  },
+  "devDependencies": {
+    "@salesforce/eslint-config-lwc": "4.1.2",
+    "@salesforce/sfdx-lwc-jest": "7.9.0",
+    "eslint": "9.39.5",
+    "prettier": "3.9.5",
+    "prettier-plugin-apex": "2.3.0"
+  }
+}
+

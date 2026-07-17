@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>A purchased Item, its quantity, and the unit price captured at checkout.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <label>Purchase Line</label>
+    <nameField>
+        <displayFormat>PL-{000000}</displayFormat>
+        <label>Purchase Line Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Purchase Lines</pluralLabel>
+    <sharingModel>ControlledByParent</sharingModel>
+</CustomObject>
+

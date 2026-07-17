@@ -1,0 +1,12 @@
+.sf/
+.sfdx/
+.localdevserver/
+.vscode/
+coverage/
+node_modules/
+.env
+.env.*
+*.log
+mdapi-output/
+test-results/
+

@@ -1,0 +1,9 @@
+**/jsconfig.json
+**/.eslintrc.json
+**/__tests__/**
+**/*.test.js
+node_modules/**
+coverage/**
+.sf/**
+.sfdx/**
+

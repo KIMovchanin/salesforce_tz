@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IsManager__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Controls access to Item creation in the Item Purchase Tool.</description>
+    <label>Is Manager</label>
+    <type>Checkbox</type>
+</CustomField>
+
