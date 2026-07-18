@@ -4,28 +4,41 @@ public with sharing class InventoryNotificationEmailAction {
   @InvocableMethod(label='Send Out of Stock Email')
   public static List<Result> send(List<Request> requests) {
     List<Result> results = new List<Result>();
-    Id templateId = findTemplateId();
-    for (Request request : requests) {
-      results.add(sendOne(request, templateId));
+    if (requests == null || requests.isEmpty()) {
+      return results;
     }
+
+    Id templateId = findTemplateId();
+    List<Messaging.SingleEmailMessage> messages = new List<Messaging.SingleEmailMessage>();
+    List<Integer> messageResultIndexes = new List<Integer>();
+    for (Request request : requests) {
+      PreparedEmail preparedEmail = prepareOne(request, templateId);
+      results.add(preparedEmail.result);
+      if (preparedEmail.message != null) {
+        messages.add(preparedEmail.message);
+        messageResultIndexes.add(results.size() - 1);
+      }
+    }
+    sendPrepared(messages, messageResultIndexes, results);
     return results;
   }
 
-  private static Result sendOne(Request request, Id templateId) {
-    Result result = new Result();
+  private static PreparedEmail prepareOne(Request request, Id templateId) {
+    PreparedEmail preparedEmail = new PreparedEmail();
+    preparedEmail.result = new Result();
     if (
       request == null ||
       request.itemId == null ||
       String.isBlank(request.recipientEmail)
     ) {
-      result.sent = false;
-      result.message = 'Recipient email or item is missing.';
-      return result;
+      preparedEmail.result.sent = false;
+      preparedEmail.result.message = 'Recipient email or item is missing.';
+      return preparedEmail;
     }
     if (templateId == null) {
-      result.sent = false;
-      result.message = 'Out of stock email template is unavailable.';
-      return result;
+      preparedEmail.result.sent = false;
+      preparedEmail.result.message = 'Out of stock email template is unavailable.';
+      return preparedEmail;
     }
 
     try {
@@ -42,18 +55,41 @@ public with sharing class InventoryNotificationEmailAction {
       message.setHtmlBody(rendered.getHtmlBody());
       message.setSaveAsActivity(false);
       message.setUseSignature(false);
-      Messaging.SendEmailResult sendResult = Messaging.sendEmail(
-        new List<Messaging.SingleEmailMessage>{ message }
-      )[0];
-      result.sent = sendResult.isSuccess();
-      result.message = result.sent
-        ? null
-        : 'Salesforce rejected the inventory email.';
+      preparedEmail.message = message;
     } catch (Exception exception) {
-      result.sent = false;
-      result.message = 'The inventory email could not be sent.';
+      preparedEmail.result.sent = false;
+      preparedEmail.result.message = 'The inventory email could not be sent.';
     }
-    return result;
+    return preparedEmail;
+  }
+
+  private static void sendPrepared(
+    List<Messaging.SingleEmailMessage> messages,
+    List<Integer> messageResultIndexes,
+    List<Result> results
+  ) {
+    if (messages.isEmpty()) {
+      return;
+    }
+
+    try {
+      List<Messaging.SendEmailResult> sendResults = Messaging.sendEmail(
+        messages,
+        false
+      );
+      for (Integer index = 0; index < messages.size(); index++) {
+        Result result = results[messageResultIndexes[index]];
+        result.sent = sendResults[index].isSuccess();
+        result.message = result.sent
+          ? null
+          : 'Salesforce rejected the inventory email.';
+      }
+    } catch (Exception exception) {
+      for (Integer resultIndex : messageResultIndexes) {
+        results[resultIndex].sent = false;
+        results[resultIndex].message = 'The inventory email could not be sent.';
+      }
+    }
   }
 
   private static Id findTemplateId() {
@@ -98,5 +134,10 @@ public with sharing class InventoryNotificationEmailAction {
 
     @InvocableVariable
     public String message;
+  }
+
+  private class PreparedEmail {
+    Messaging.SingleEmailMessage message;
+    Result result;
   }
 }
