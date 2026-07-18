@@ -1,0 +1,140 @@
+<template>
+  <c-modal-shell heading={heading} size="large" onclose={handleClose}>
+    <template lwc:if={busy}>
+      <lightning-spinner
+        alternative-text="Completing checkout"
+        size="medium"
+      ></lightning-spinner>
+    </template>
+    <template lwc:if={hasItems}>
+      <template lwc:if={hasInventoryConflict}>
+        <div
+          class="slds-notify slds-notify_alert slds-alert_error"
+          role="alert"
+        >
+          <span class="slds-assistive-text">Error</span>
+          One or more quantities exceed current stock.
+        </div>
+      </template>
+      <template lwc:if={accountUnavailable}>
+        <div
+          class="slds-notify slds-notify_alert slds-alert_warning"
+          role="alert"
+        >
+          <span class="slds-assistive-text">Warning</span>
+          Open the purchase tool from an Account to check out.
+        </div>
+      </template>
+      <div class="table-wrap">
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+          <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Unit price</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Total</th>
+              <th scope="col">
+                <span class="slds-assistive-text">Remove</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <template for:each={items} for:item="line">
+              <tr key={line.itemId}>
+                <th scope="row">
+                  <div class="item-cell">
+                    <template lwc:if={line.imageUrl}>
+                      <img src={line.imageUrl} alt="" />
+                    </template>
+                    <div>
+                      <div class="slds-truncate" title={line.name}>
+                        {line.name}
+                      </div>
+                      <div class="availability">
+                        {line.availableQuantity} available
+                      </div>
+                    </div>
+                  </div>
+                </th>
+                <td>
+                  <lightning-formatted-number
+                    value={line.price}
+                    format-style="currency"
+                    currency-code="USD"
+                  ></lightning-formatted-number>
+                </td>
+                <td class="quantity-cell">
+                  <lightning-input
+                    type="number"
+                    label="Quantity"
+                    variant="label-hidden"
+                    min="1"
+                    max={line.availableQuantity}
+                    step="1"
+                    value={line.quantity}
+                    data-item-id={line.itemId}
+                    onchange={handleQuantityChange}
+                  ></lightning-input>
+                </td>
+                <td>
+                  <lightning-formatted-number
+                    value={line.lineTotal}
+                    format-style="currency"
+                    currency-code="USD"
+                  ></lightning-formatted-number>
+                </td>
+                <td>
+                  <lightning-button-icon
+                    icon-name="utility:delete"
+                    variant="bare"
+                    alternative-text="Remove item"
+                    title="Remove item"
+                    data-item-id={line.itemId}
+                    onclick={handleRemove}
+                  ></lightning-button-icon>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row" colspan="3">Grand total</th>
+              <td colspan="2" class="grand-total">
+                <lightning-formatted-number
+                  value={grandTotal}
+                  format-style="currency"
+                  currency-code="USD"
+                ></lightning-formatted-number>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </template>
+    <template lwc:else>
+      <div class="empty-state">
+        <lightning-icon
+          icon-name="utility:cart"
+          size="large"
+          alternative-text="Empty cart"
+        ></lightning-icon>
+        <h3 class="slds-text-heading_small">Your cart is empty</h3>
+        <p>Add an in-stock item from the catalog.</p>
+      </div>
+    </template>
+    <div slot="footer" class="footer-actions">
+      <lightning-button
+        label="Continue shopping"
+        variant="neutral"
+        disabled={busy}
+        onclick={handleClose}
+      ></lightning-button>
+      <lightning-button
+        label="Checkout"
+        variant="brand"
+        disabled={checkoutDisabled}
+        onclick={handleCheckout}
+      ></lightning-button>
+    </div>
+  </c-modal-shell>
+</template>

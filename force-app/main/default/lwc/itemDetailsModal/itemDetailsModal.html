@@ -1,0 +1,58 @@
+<template>
+  <c-modal-shell heading={heading} size="medium" onclose={handleClose}>
+    <div class="details">
+      <div class="media">
+        <template lwc:if={hasImage}>
+          <img src={item.Image__c} alt={heading} />
+        </template>
+        <template lwc:else>
+          <div class="placeholder">
+            <lightning-icon
+              icon-name="standard:product_item"
+              size="large"
+              alternative-text="Image unavailable"
+            ></lightning-icon>
+          </div>
+        </template>
+      </div>
+      <div class="information">
+        <dl class="facts">
+          <div>
+            <dt>Type</dt>
+            <dd>{item.Type__c}</dd>
+          </div>
+          <div>
+            <dt>Family</dt>
+            <dd>{item.Family__c}</dd>
+          </div>
+          <div>
+            <dt>Price</dt>
+            <dd>
+              <lightning-formatted-number
+                value={item.Price__c}
+                format-style="currency"
+                currency-code="USD"
+              ></lightning-formatted-number>
+            </dd>
+          </div>
+        </dl>
+        <p class={stockClass}>{stockLabel}</p>
+        <h3 class="slds-text-title_bold">Description</h3>
+        <p class="description">{description}</p>
+      </div>
+    </div>
+    <div slot="footer" class="footer-actions">
+      <lightning-button
+        label="Close"
+        variant="neutral"
+        onclick={handleClose}
+      ></lightning-button>
+      <lightning-button
+        label="Add to cart"
+        variant="brand"
+        disabled={isOutOfStock}
+        onclick={handleAdd}
+      ></lightning-button>
+    </div>
+  </c-modal-shell>
+</template>

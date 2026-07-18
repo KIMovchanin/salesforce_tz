@@ -1,0 +1,97 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid #c9c9c9;
+  border-radius: 0.5rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+}
+
+.media {
+  height: 10rem;
+  background: #f3f3f3;
+}
+
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem;
+}
+
+.heading-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.heading-row h3 {
+  min-width: 0;
+}
+
+.price {
+  flex: none;
+  color: #181818;
+  font-weight: 700;
+}
+
+.metadata {
+  color: #444;
+  font-size: 0.75rem;
+}
+
+.description {
+  display: -webkit-box;
+  min-height: 2.5rem;
+  overflow: hidden;
+  color: #444;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.stock {
+  margin-top: auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.stock_available {
+  color: #2e844a;
+}
+
+.stock_empty {
+  color: #ba0517;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.actions lightning-button {
+  flex: 1;
+}

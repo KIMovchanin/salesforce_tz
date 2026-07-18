@@ -1,0 +1,19 @@
+:host {
+  position: relative;
+  z-index: 9001;
+}
+
+.slds-modal__content {
+  max-height: min(70vh, 48rem);
+}
+
+@media (max-width: 48rem) {
+  .slds-modal__container {
+    margin: 0 0.75rem;
+    width: auto;
+  }
+
+  .slds-modal__content {
+    padding: 1rem;
+  }
+}

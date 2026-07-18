@@ -1,0 +1,163 @@
+<template>
+  <main class="purchase-tool">
+    <section class="header-panel" aria-label="Purchase context">
+      <div class="topbar">
+        <div class="primary-action">
+          <template lwc:if={isManager}>
+            <lightning-button
+              label="Create item"
+              variant="brand"
+              icon-name="utility:add"
+              onclick={openCreate}
+            ></lightning-button>
+          </template>
+        </div>
+        <dl class="account-details">
+          <div>
+            <dt>Account name</dt>
+            <dd title={accountName}>{accountName}</dd>
+          </div>
+          <div>
+            <dt>Account number</dt>
+            <dd title={accountNumber}>{accountNumber}</dd>
+          </div>
+          <div>
+            <dt>Industry</dt>
+            <dd title={accountIndustry}>{accountIndustry}</dd>
+          </div>
+        </dl>
+        <lightning-button
+          class="cart-button"
+          label={cartLabel}
+          variant="neutral"
+          icon-name="utility:cart"
+          onclick={openCart}
+        ></lightning-button>
+      </div>
+      <template lwc:if={accountLoadError}>
+        <div class="context-message context-message_error" role="alert">
+          {accountLoadError}
+        </div>
+      </template>
+      <template lwc:if={accountContextMissing}>
+        <div class="context-message" role="status">
+          Open this page from an Account to enable checkout.
+        </div>
+      </template>
+    </section>
+
+    <div class="workspace">
+      <section class="catalog" aria-label="Item catalog">
+        <div class="search-bar">
+          <lightning-input
+            type="search"
+            label="Search items"
+            variant="label-hidden"
+            placeholder="Search by name or description"
+            value={searchTerm}
+            onchange={handleSearchInput}
+          ></lightning-input>
+        </div>
+        <template lwc:if={isLoadingItems}>
+          <div class="catalog-loading">
+            <lightning-spinner
+              alternative-text="Loading items"
+              size="medium"
+            ></lightning-spinner>
+          </div>
+        </template>
+        <template lwc:if={catalogError}>
+          <div class="catalog-message" role="alert">
+            <lightning-icon
+              icon-name="utility:error"
+              size="small"
+              alternative-text="Error"
+            ></lightning-icon>
+            <p>{catalogError}</p>
+            <lightning-button
+              label="Try again"
+              variant="neutral"
+              onclick={loadItems}
+            ></lightning-button>
+          </div>
+        </template>
+        <template lwc:elseif={hasItems}>
+          <div class="item-grid">
+            <template for:each={items} for:item="item">
+              <c-item-tile
+                key={item.Id}
+                item={item}
+                onshowdetails={handleShowDetails}
+                onadditem={handleAddItem}
+              ></c-item-tile>
+            </template>
+          </div>
+        </template>
+        <template lwc:else>
+          <div class="catalog-message" role="status">
+            <lightning-icon
+              icon-name="utility:search"
+              size="large"
+              alternative-text="No items"
+            ></lightning-icon>
+            <h2 class="slds-text-heading_small">No items found</h2>
+            <p>Adjust the search or filters to see more results.</p>
+          </div>
+        </template>
+      </section>
+
+      <aside class="filters" aria-label="Catalog filters">
+        <div class="filter-heading">
+          <h2 class="slds-text-heading_small">Filters</h2>
+          <span class="count-badge">{itemCountLabel}</span>
+        </div>
+        <lightning-combobox
+          name="typeFilter"
+          label="Type"
+          value={selectedType}
+          options={typeOptions}
+          onchange={handleTypeChange}
+        ></lightning-combobox>
+        <lightning-combobox
+          name="familyFilter"
+          label="Family"
+          value={selectedFamily}
+          options={familyOptions}
+          onchange={handleFamilyChange}
+        ></lightning-combobox>
+      </aside>
+    </div>
+  </main>
+
+  <template lwc:if={isDetailsOpen}>
+    <c-item-details-modal
+      item={selectedItem}
+      onclose={closeDetails}
+      onadditem={handleDetailsAdd}
+    ></c-item-details-modal>
+  </template>
+  <template lwc:if={isCartOpen}>
+    <c-item-cart-modal
+      items={cartItems}
+      busy={isCheckingOut}
+      account-available={hasAccountContext}
+      onclose={closeCart}
+      onupdatequantity={handleQuantityUpdate}
+      onremoveitem={handleRemoveItem}
+      oncheckout={handleCheckout}
+    ></c-item-cart-modal>
+  </template>
+  <template lwc:if={isCreateOpen}>
+    <c-item-create-modal
+      type-options={createTypeOptions}
+      family-options={createFamilyOptions}
+      saving={isCreating}
+      error-message={createError}
+      onclose={closeCreate}
+      onsaveitem={handleCreateItem}
+    ></c-item-create-modal>
+  </template>
+  <template lwc:if={isInitializing}>
+    <span class="slds-assistive-text">Initializing purchase tool</span>
+  </template>
+</template>

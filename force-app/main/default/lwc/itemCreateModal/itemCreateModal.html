@@ -1,0 +1,93 @@
+<template>
+  <c-modal-shell heading="Create item" size="medium" onclose={handleClose}>
+    <template lwc:if={saving}>
+      <lightning-spinner
+        alternative-text="Creating item and finding an image"
+        size="medium"
+      ></lightning-spinner>
+    </template>
+    <template lwc:if={errorMessage}>
+      <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+        <span class="slds-assistive-text">Error</span>
+        {errorMessage}
+      </div>
+    </template>
+    <div class="form-grid">
+      <lightning-input
+        class="full-width"
+        name="name"
+        type="text"
+        label="Name"
+        maxlength="80"
+        required
+        disabled={saving}
+        onchange={handleFieldChange}
+      ></lightning-input>
+      <lightning-textarea
+        class="full-width"
+        name="description"
+        label="Description"
+        maxlength="255"
+        disabled={saving}
+        onchange={handleFieldChange}
+      ></lightning-textarea>
+      <lightning-combobox
+        name="type"
+        label="Type"
+        options={typeOptions}
+        placeholder="Select a type"
+        required
+        disabled={saving}
+        onchange={handleFieldChange}
+      ></lightning-combobox>
+      <lightning-combobox
+        name="family"
+        label="Family"
+        options={familyOptions}
+        placeholder="Select a family"
+        required
+        disabled={saving}
+        onchange={handleFieldChange}
+      ></lightning-combobox>
+      <lightning-input
+        name="price"
+        type="number"
+        label="Price"
+        formatter="currency"
+        min="0"
+        step="0.01"
+        required
+        disabled={saving}
+        onchange={handleFieldChange}
+      ></lightning-input>
+      <lightning-input
+        name="availableQuantity"
+        type="number"
+        label="Available quantity"
+        min="0"
+        step="1"
+        required
+        disabled={saving}
+        onchange={handleFieldChange}
+      ></lightning-input>
+    </div>
+    <p class="image-note">
+      The product image is selected automatically from Unsplash using the item
+      name.
+    </p>
+    <div slot="footer" class="footer-actions">
+      <lightning-button
+        label="Cancel"
+        variant="neutral"
+        disabled={saving}
+        onclick={handleClose}
+      ></lightning-button>
+      <lightning-button
+        label="Create item"
+        variant="brand"
+        disabled={saveDisabled}
+        onclick={handleSave}
+      ></lightning-button>
+    </div>
+  </c-modal-shell>
+</template>

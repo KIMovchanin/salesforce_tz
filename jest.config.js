@@ -1,11 +1,11 @@
 const { jestConfig } = require("@salesforce/sfdx-lwc-jest/config");
 
 module.exports = {
-    ...jestConfig,
-    collectCoverageFrom: [
-        "force-app/main/default/lwc/**/*.js",
-        "!force-app/main/default/lwc/**/__tests__/**"
-    ],
-    coverageDirectory: "coverage"
+  ...jestConfig,
+  collectCoverageFrom: [
+    "**/lwc/**/*.js",
+    "!**/lwc/**/__tests__/**",
+    "!mdapi-output/**"
+  ],
+  coverageDirectory: "coverage"
 };
-

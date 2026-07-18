@@ -1,0 +1,60 @@
+:host {
+  display: block;
+}
+
+.slds-notify_alert {
+  margin-bottom: 1rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  min-width: 40rem;
+}
+
+.item-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 12rem;
+}
+
+.item-cell img {
+  width: 3rem;
+  height: 3rem;
+  flex: none;
+  border-radius: 0.25rem;
+  object-fit: cover;
+}
+
+.availability {
+  padding-top: 0.15rem;
+  color: #444;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.quantity-cell {
+  width: 7rem;
+}
+
+.grand-total {
+  font-weight: 700;
+}
+
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: 3rem 1rem;
+  color: #444;
+  text-align: center;
+}
+
+.footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
