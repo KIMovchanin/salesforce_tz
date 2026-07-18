@@ -120,6 +120,48 @@ private class PurchaseCheckoutServiceTest {
   }
 
   @IsTest
+  static void checkoutOfEntireStockTriggersOutOfStockEmail() {
+    User checkoutUser = authorizedCheckoutUser();
+    Account account = checkoutAccount();
+    Item__c cable = checkoutItem('Checkout Cable');
+    Database.insert(
+      new Inventory_Notification_Settings__c(
+        SetupOwnerId = UserInfo.getOrganizationId(),
+        Recipient_User__c = String.valueOf(checkoutUser.Id),
+        Recipient_Email__c = 'inventory@example.com'
+      ),
+      AccessLevel.SYSTEM_MODE
+    );
+    Id purchaseId;
+    Integer emailInvocations;
+
+    System.runAs(checkoutUser) {
+      Test.startTest();
+      purchaseId = PurchaseToolController.checkout(
+        account.Id,
+        new List<CartLineInput>{
+          PurchaseTestFactory.cartLine(cable.Id, cable.AvailableQuantity__c)
+        }
+      );
+      emailInvocations = Limits.getEmailInvocations();
+      Test.stopTest();
+    }
+
+    System.Assert.isNotNull(purchaseId);
+    System.Assert.areEqual(1, emailInvocations);
+    System.Assert.areEqual(
+      Decimal.valueOf('0'),
+      [
+        SELECT AvailableQuantity__c
+        FROM Item__c
+        WHERE Id = :cable.Id
+        WITH SYSTEM_MODE
+      ]
+      .AvailableQuantity__c
+    );
+  }
+
+  @IsTest
   static void rejectsMissingCartLinesAndReferences() {
     User checkoutUser = authorizedCheckoutUser();
     Account account = checkoutAccount();

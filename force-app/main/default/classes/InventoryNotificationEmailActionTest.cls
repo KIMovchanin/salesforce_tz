@@ -115,14 +115,7 @@ private class InventoryNotificationEmailActionTest {
 
   @IsTest
   static void outOfStockFlowRunsNotificationAndEmailBranches() {
-    Database.insert(
-      new Inventory_Notification_Settings__c(
-        SetupOwnerId = UserInfo.getOrganizationId(),
-        Recipient_User__c = String.valueOf(UserInfo.getUserId()),
-        Recipient_Email__c = 'inventory@example.com'
-      ),
-      AccessLevel.SYSTEM_MODE
-    );
+    configureNotifications(String.valueOf(UserInfo.getUserId()));
     Item__c item = emailItem();
     item.AvailableQuantity__c = 0;
     User currentUser = [
@@ -153,15 +146,59 @@ private class InventoryNotificationEmailActionTest {
   }
 
   @IsTest
-  static void invalidBellRecipientFallsBackToEmailWithoutBlockingStock() {
-    Database.insert(
-      new Inventory_Notification_Settings__c(
-        SetupOwnerId = UserInfo.getOrganizationId(),
-        Recipient_User__c = 'INVALIDUSERID00000',
-        Recipient_Email__c = 'inventory@example.com'
-      ),
-      AccessLevel.SYSTEM_MODE
+  static void outOfStockFlowIgnoresNonQualifyingDmlTransitions() {
+    configureNotifications(String.valueOf(UserInfo.getUserId()));
+    Item__c item = emailItem();
+    item.AvailableQuantity__c = 4;
+    Item__c zeroStockItem = PurchaseTestFactory.itemRecord(
+      'Zero Stock Insert',
+      'Inserted with no stock',
+      'Product',
+      'Other',
+      10,
+      0
     );
+
+    Test.startTest();
+    Database.update(item, AccessLevel.SYSTEM_MODE);
+    System.Assert.areEqual(0, Limits.getEmailInvocations());
+    Database.insert(zeroStockItem, AccessLevel.SYSTEM_MODE);
+    System.Assert.areEqual(0, Limits.getEmailInvocations());
+    zeroStockItem.Description__c = 'Updated while already out of stock';
+    Database.update(zeroStockItem, AccessLevel.SYSTEM_MODE);
+    Integer emailInvocations = Limits.getEmailInvocations();
+    Test.stopTest();
+
+    System.Assert.areEqual(0, emailInvocations);
+    System.Assert.areEqual(
+      Decimal.valueOf('4'),
+      [
+        SELECT AvailableQuantity__c
+        FROM Item__c
+        WHERE Id = :item.Id
+        WITH SYSTEM_MODE
+      ]
+      .AvailableQuantity__c
+    );
+    zeroStockItem = [
+      SELECT AvailableQuantity__c, Description__c
+      FROM Item__c
+      WHERE Id = :zeroStockItem.Id
+      WITH SYSTEM_MODE
+    ];
+    System.Assert.areEqual(
+      Decimal.valueOf('0'),
+      zeroStockItem.AvailableQuantity__c
+    );
+    System.Assert.areEqual(
+      'Updated while already out of stock',
+      zeroStockItem.Description__c
+    );
+  }
+
+  @IsTest
+  static void invalidBellRecipientFallsBackToEmailWithoutBlockingStock() {
+    configureNotifications('INVALIDUSERID00000');
     Item__c item = emailItem();
     item.AvailableQuantity__c = 0;
 
@@ -183,9 +220,20 @@ private class InventoryNotificationEmailActionTest {
     );
   }
 
+  private static void configureNotifications(String recipientUserId) {
+    Database.insert(
+      new Inventory_Notification_Settings__c(
+        SetupOwnerId = UserInfo.getOrganizationId(),
+        Recipient_User__c = recipientUserId,
+        Recipient_Email__c = 'inventory@example.com'
+      ),
+      AccessLevel.SYSTEM_MODE
+    );
+  }
+
   private static Item__c emailItem() {
     return [
-      SELECT Id
+      SELECT Id, AvailableQuantity__c
       FROM Item__c
       WHERE Name = 'Email Test Item'
       WITH SYSTEM_MODE

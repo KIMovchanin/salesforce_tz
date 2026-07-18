@@ -233,6 +233,8 @@ sf project deploy start --manifest manifest/package.xml --target-org item-purcha
 
 Секрет не входит в metadata, package или Git. Это обязательное ограничение Salesforce External Credentials.
 
+В Unsplash Developers откройте `Your apps` → `New Application`, лично подтвердите четыре API Guidelines и примите API Terms, затем создайте demo application и скопируйте Access Key. Принятие юридических условий нельзя делегировать; ключ нельзя присылать в чат или добавлять в репозиторий.
+
 ```powershell
 $env:UNSPLASH_ACCESS_KEY = 'your-access-key'
 pnpm configure:unsplash item-purchase-dev
@@ -354,13 +356,15 @@ pnpm test:unit:coverage
 
 Текущий подтверждённый результат:
 
-- 8 Jest suites, 25 tests — passed;
+- 8 Jest suites, 27 tests — passed;
 - ESLint — passed;
 - Prettier — passed;
 - XML metadata parse и проверка отсутствия комментариев в коде — passed;
 - source-to-Metadata API conversion: 89 файлов, без предупреждений;
 - Dev Org deployment `0AfdL00000dr5G3SAI`: 70/70 компонентов, без ошибок;
-- отдельный Apex run `707dL00001FITxy`: 29/29 tests passed, test-run coverage 92%, org-wide coverage 91%;
+- test-only deployments `0AfdL00000drdj7SAA` и `0AfdL00000drfGHSAY`: 3/3 и 1/1 компонентов;
+- check-only manifest validation `0AfdL00000dr4WsSAI`: 72/72 компонентов и 27/27 deployment tests, без ошибок;
+- отдельный Apex run `707dL00001FIrxu`: 32/32 tests passed, test-run coverage 92%, org-wide coverage 91%;
 - Apex tests не используют `SeeAllData=true`.
 
 Текущий Unsplash/FLS hardening развёрнут в Dev Org и прошёл полный отдельный `RunLocalTests`. Unmanaged package 1.2 был загружен раньше и эту версию ещё не содержит.
@@ -373,7 +377,7 @@ GitHub Actions запускает install, formatting check, ESLint и Jest пр
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | GitHub repository URL              | Приватный репозиторий: `https://github.com/KIMovchanin/salesforce_tz`; `main` содержит текущий проверенный snapshot |
 | Dev Org deployment                 | Успешно: `0AfdL00000dr5G3SAI`, 70/70 компонентов                                                                    |
-| Apex server tests                  | 29/29 passed, run `707dL00001FITxy`, test-run coverage 92%, org-wide coverage 91%                                   |
+| Apex server tests                  | 32/32 passed, run `707dL00001FIrxu`, test-run coverage 92%, org-wide coverage 91%                                   |
 | Admin `dev@truesolv.com`           | Создан и настроен                                                                                                   |
 | Demo data                          | `Demo Customer` и четыре Item созданы; авторы и профильные URL Unsplash проверены и заполнены                       |
 | Unmanaged package installation URL | Версия 1.2 относится к предыдущему snapshot; текущий deployment в неё не входит                                     |

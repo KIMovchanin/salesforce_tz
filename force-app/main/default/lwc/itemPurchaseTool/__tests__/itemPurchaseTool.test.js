@@ -186,6 +186,85 @@ describe("c-item-purchase-tool", () => {
     );
   });
 
+  it("opens item details and adds the selected item from the modal", async () => {
+    const element = createElement("c-item-purchase-tool", {
+      is: ItemPurchaseTool
+    });
+    document.body.appendChild(element);
+    await flushPromises();
+
+    element.shadowRoot
+      .querySelector("c-item-tile")
+      .dispatchEvent(
+        new CustomEvent("showdetails", { detail: { item: CATALOG[0] } })
+      );
+    await Promise.resolve();
+
+    const detailsModal = element.shadowRoot.querySelector(
+      "c-item-details-modal"
+    );
+    expect(detailsModal.item).toEqual(CATALOG[0]);
+
+    detailsModal.dispatchEvent(
+      new CustomEvent("additem", { detail: { item: CATALOG[0] } })
+    );
+    await Promise.resolve();
+
+    expect(element.shadowRoot.querySelector("c-item-details-modal")).toBeNull();
+    const cartButton = [
+      ...element.shadowRoot.querySelectorAll("lightning-button")
+    ].find((button) => button.label.startsWith("Cart"));
+    expect(cartButton.label).toBe("Cart (1)");
+  });
+
+  it("applies cart quantity updates and removals to parent state", async () => {
+    const element = createElement("c-item-purchase-tool", {
+      is: ItemPurchaseTool
+    });
+    document.body.appendChild(element);
+    await flushPromises();
+
+    const tiles = element.shadowRoot.querySelectorAll("c-item-tile");
+    tiles[0].dispatchEvent(
+      new CustomEvent("additem", { detail: { item: CATALOG[0] } })
+    );
+    tiles[1].dispatchEvent(
+      new CustomEvent("additem", { detail: { item: CATALOG[1] } })
+    );
+    const cartButton = [
+      ...element.shadowRoot.querySelectorAll("lightning-button")
+    ].find((button) => button.label.startsWith("Cart"));
+    cartButton.click();
+    await Promise.resolve();
+
+    element.shadowRoot.querySelector("c-item-cart-modal").dispatchEvent(
+      new CustomEvent("updatequantity", {
+        detail: { itemId: CATALOG[0].Id, quantity: 3 }
+      })
+    );
+    await Promise.resolve();
+
+    let cartModal = element.shadowRoot.querySelector("c-item-cart-modal");
+    expect(cartModal.items).toEqual([
+      expect.objectContaining({ itemId: CATALOG[0].Id, quantity: 3 }),
+      expect.objectContaining({ itemId: CATALOG[1].Id, quantity: 1 })
+    ]);
+    expect(cartButton.label).toBe("Cart (4)");
+
+    cartModal.dispatchEvent(
+      new CustomEvent("removeitem", {
+        detail: { itemId: CATALOG[1].Id }
+      })
+    );
+    await Promise.resolve();
+
+    cartModal = element.shadowRoot.querySelector("c-item-cart-modal");
+    expect(cartModal.items).toEqual([
+      expect.objectContaining({ itemId: CATALOG[0].Id, quantity: 3 })
+    ]);
+    expect(cartButton.label).toBe("Cart (3)");
+  });
+
   it("searches text and combines it with family filters", async () => {
     const element = createElement("c-item-purchase-tool", {
       is: ItemPurchaseTool

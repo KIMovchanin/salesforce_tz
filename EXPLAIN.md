@@ -312,6 +312,8 @@ Tracking использует тот же Named Credential и относител
 
 Каждый request отправляет `Accept-Version: v1`. Metadata содержит формулу Authorization header и имя параметра, но не значение AccessKey. После deployment администратор создаёт encrypted authentication parameter через Setup или `scripts/configure-unsplash.ps1`.
 
+Сначала владелец Unsplash-аккаунта сам открывает `Your apps` → `New Application`, отмечает четыре API Guidelines и принимает API Terms. Это юридическое согласие нельзя безопасно выполнить за владельца. После создания demo application Access Key настраивается по командам из README локально через переменную окружения; в чат, файл и Git ключ не копируется.
+
 Manager permission set содержит:
 
 - доступ к principal External Credential;
@@ -362,7 +364,7 @@ Test setup и технические assertion-запросы использую
 
 Проверка `TotalItems = 6` и `GrandTotal = 375.25` подтверждает не только Apex service, но и after-save Flow.
 
-Отдельный delete-тест подтверждает before-delete Flow.
+Отдельные DML-тесты подтверждают пересчёт после update существующей Purchase Line и before-delete Flow. Интеграционный checkout-тест выкупает весь остаток Item, получает stock `0` и подтверждает запуск out-of-stock email action внутри изолированного test context.
 
 ### Unsplash tests
 
@@ -372,13 +374,13 @@ Unit test не должен зависеть от доступности Unsplas
 
 ### Email и inventory Flow
 
-Тест использует развёрнутый template, создаёт изолированный Hierarchy Setting, переводит Item из 5 в 0 и проверяет ровно один email invocation. Отдельная управляемая подмена developer name проверяет ветку отсутствующего template без mixed-DML setup.
+Тест использует развёрнутый template, создаёт изолированный Hierarchy Setting, переводит Item из 5 в 0 и проверяет ровно один email invocation. Отдельная управляемая подмена developer name проверяет ветку отсутствующего template без mixed-DML setup. Негативный DML-тест отдельно доказывает отсутствие email invocation для перехода 5 → 4, insert сразу с нулевым остатком и изменения другого поля у уже нулевого Item.
 
 Flow test использует активного текущего User, проходит Get User и Custom Notification action, одновременно подтверждая, что stock update и email не блокируются. Salesforce не предоставляет надёжный queryable artifact доставки Bell внутри Apex unit test, поэтому появление уведомления в интерфейсе остаётся ручной acceptance-проверкой; отдельный test покрывает fault fallback для некорректного User Id.
 
 ### LWC Jest
 
-Jest работает в jsdom и подменяет Apex imports. Тестируется видимая разметка, события, manager state, stock guard, cart payload, navigation, полная attribution с UTM/`target`/`rel` и скрытие Unsplash-фото без доверенного автора.
+Jest работает в jsdom и подменяет Apex imports. Тестируется видимая разметка, события, manager state, stock guard, cart payload, navigation, полная attribution с UTM/`target`/`rel` и скрытие Unsplash-фото без доверенного автора. Parent-level tests проходят связи Item Tile → Details modal → Add и Cart modal → quantity update/remove до конечного состояния родительской корзины.
 
 Jest не запускает реальный Apex. Apex tests не запускают настоящий браузер. Оба слоя нужны, потому что проверяют разные границы.
 
@@ -397,7 +399,9 @@ Jest не запускает реальный Apex. Apex tests не запуск
 7. финальный LWC deduplication deployment `0AfdL00000dqsUzSAI` завершён успешно;
 8. загружен unmanaged package `033dL000000fPdZ`, версия 1.2 `04tdL000000kBtJQAU`;
 9. текущий Unsplash/FLS hardening развёрнут deployment `0AfdL00000dr5G3SAI`: 70/70 компонентов, без ошибок;
-10. отдельный Apex run `707dL00001FITxy` завершён: 29/29 tests passed, test-run coverage 92%, org-wide coverage 91%.
+10. test-only deployments `0AfdL00000drdj7SAA` и `0AfdL00000drfGHSAY` добавили финальные acceptance tests;
+11. check-only manifest validation `0AfdL00000dr4WsSAI` завершён: 72/72 компонентов и 27/27 deployment tests, без ошибок;
+12. отдельный Apex run `707dL00001FIrxu` завершён: 32/32 tests passed, test-run coverage 92%, org-wide coverage 91%.
 
 Installation URL: [Item Purchase Tool 1.2](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kBtJQAU).
 

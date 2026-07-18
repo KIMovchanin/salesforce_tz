@@ -183,6 +183,33 @@ private class PurchaseTotalsFlowActionTest {
   }
 
   @IsTest
+  static void afterUpdateFlowRecalculatesTotalsForExistingLine() {
+    Purchase__c purchase = purchaseByName('Test Purchase Totals One');
+    PurchaseLine__c lineToUpdate = [
+      SELECT Id, Amount__c, UnitCost__c
+      FROM PurchaseLine__c
+      WHERE PurchaseId__c = :purchase.Id AND Amount__c = 2
+      WITH SYSTEM_MODE
+      LIMIT 1
+    ];
+    lineToUpdate.Amount__c = 5;
+    lineToUpdate.UnitCost__c = 12;
+
+    Test.startTest();
+    Database.update(lineToUpdate, AccessLevel.SYSTEM_MODE);
+    Test.stopTest();
+
+    purchase = [
+      SELECT TotalItems__c, GrandTotal__c
+      FROM Purchase__c
+      WHERE Id = :purchase.Id
+      WITH SYSTEM_MODE
+    ];
+    System.Assert.areEqual(Decimal.valueOf('8'), purchase.TotalItems__c);
+    System.Assert.areEqual(Decimal.valueOf('135'), purchase.GrandTotal__c);
+  }
+
+  @IsTest
   static void leavesTotalsUntouchedWhenNoPurchaseIsRequested() {
     Purchase__c purchase = purchaseByName('Test Purchase Totals One');
     purchase.TotalItems__c = 12;
