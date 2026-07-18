@@ -142,6 +142,30 @@ private class InventoryNotificationEmailActionTest {
     );
   }
 
+  @IsTest
+  static void invalidBellRecipientFallsBackToEmailWithoutBlockingStock() {
+    createTestTemplate();
+    insert new Inventory_Notification_Settings__c(
+      SetupOwnerId = UserInfo.getOrganizationId(),
+      Recipient_User__c = 'INVALIDUSERID00000',
+      Recipient_Email__c = 'inventory@example.com'
+    );
+    Item__c item = emailItem();
+    item.AvailableQuantity__c = 0;
+
+    Test.startTest();
+    update item;
+    Integer emailInvocations = Limits.getEmailInvocations();
+    Test.stopTest();
+
+    System.Assert.areEqual(1, emailInvocations);
+    System.Assert.areEqual(
+      Decimal.valueOf('0'),
+      [SELECT AvailableQuantity__c FROM Item__c WHERE Id = :item.Id]
+      .AvailableQuantity__c
+    );
+  }
+
   private static Item__c emailItem() {
     return [
       SELECT Id

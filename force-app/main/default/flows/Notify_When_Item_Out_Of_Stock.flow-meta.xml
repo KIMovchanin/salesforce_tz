@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>67.0</apiVersion>
     <actionCalls>
@@ -63,13 +63,15 @@
         <inputParameters>
             <name>recipientEmail</name>
             <value>
-                <elementReference>$Setup.Inventory_Notification_Settings__c.Recipient_Email__c</elementReference>
+                <elementReference
+        >$Setup.Inventory_Notification_Settings__c.Recipient_Email__c</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
             <name>recipientUserId</name>
             <value>
-                <elementReference>$Setup.Inventory_Notification_Settings__c.Recipient_User__c</elementReference>
+                <elementReference
+        >$Setup.Inventory_Notification_Settings__c.Recipient_User__c</elementReference>
             </value>
         </inputParameters>
         <nameSegment>InventoryNotificationEmailAction</nameSegment>
@@ -128,7 +130,8 @@
             <name>Notification_Type_Found</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_Notification_Type.Id</leftValueReference>
+                <leftValueReference
+        >Get_Notification_Type.Id</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
@@ -140,8 +143,10 @@
             <label>Notification Type Found</label>
         </rules>
     </decisions>
-    <description>Sends Bell and email notifications when an Item transitions to zero available quantity.</description>
-    <interviewLabel>Notify When Item Out Of Stock {!$Flow.CurrentDateTime}</interviewLabel>
+    <description
+  >Sends Bell and email notifications when an Item transitions to zero available quantity.</description>
+    <interviewLabel
+  >Notify When Item Out Of Stock {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Notify When Item Out Of Stock</label>
     <processType>AutoLaunchedFlow</processType>
     <recordLookups>
@@ -149,7 +154,8 @@
         <label>Get Notification Type</label>
         <locationX>176</locationX>
         <locationY>420</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <assignNullValuesIfNoRecordsFound
+    >false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Has_Notification_Type</targetReference>
         </connector>
@@ -170,16 +176,21 @@
         <label>Get Recipient User</label>
         <locationX>176</locationX>
         <locationY>180</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <assignNullValuesIfNoRecordsFound
+    >false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Has_Bell_Recipient</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Send_Email_Notification</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>$Setup.Inventory_Notification_Settings__c.Recipient_User__c</elementReference>
+                <elementReference
+        >$Setup.Inventory_Notification_Settings__c.Recipient_User__c</elementReference>
             </value>
         </filters>
         <filters>
@@ -199,7 +210,8 @@
         <connector>
             <targetReference>Get_Recipient_User</targetReference>
         </connector>
-        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <doesRequireRecordChangedToMeetCriteria
+    >true</doesRequireRecordChangedToMeetCriteria>
         <filterLogic>and</filterLogic>
         <filters>
             <field>AvailableQuantity__c</field>
@@ -216,7 +228,8 @@
     <textTemplates>
         <name>Notification_Body</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>The item &quot;{!$Record.Name}&quot; is out of stock. Please review inventory and take the necessary action.</text>
+        <text
+    >The item &quot;{!$Record.Name}&quot; is out of stock. Please review inventory and take the necessary action.</text>
     </textTemplates>
     <variables>
         <name>Notification_Recipient_Ids</name>
@@ -226,4 +239,3 @@
         <isOutput>false</isOutput>
     </variables>
 </Flow>
-

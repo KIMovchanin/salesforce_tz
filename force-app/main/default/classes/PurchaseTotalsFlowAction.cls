@@ -22,25 +22,34 @@ public with sharing class PurchaseTotalsFlowAction {
       grandTotals.put(purchaseId, 0);
     }
 
-    for (PurchaseLine__c line : [
-      SELECT Id, PurchaseId__c, Amount__c, UnitCost__c
-      FROM PurchaseLine__c
-      WHERE PurchaseId__c IN :purchaseIds
-      WITH SYSTEM_MODE
-    ]) {
-      if (excludedLineIds.contains(line.Id)) {
-        continue;
-      }
-      Decimal amount = line.Amount__c == null ? 0 : line.Amount__c;
-      Decimal unitCost = line.UnitCost__c == null ? 0 : line.UnitCost__c;
-      itemTotals.put(
-        line.PurchaseId__c,
-        itemTotals.get(line.PurchaseId__c) + amount
-      );
-      grandTotals.put(
-        line.PurchaseId__c,
-        grandTotals.get(line.PurchaseId__c) + amount * unitCost
-      );
+    List<AggregateResult> totals;
+    if (excludedLineIds.isEmpty()) {
+      totals = [
+        SELECT
+          PurchaseId__c purchaseId,
+          SUM(Amount__c) itemTotal,
+          SUM(LineTotal__c) grandTotal
+        FROM PurchaseLine__c
+        WHERE PurchaseId__c IN :purchaseIds
+        WITH SYSTEM_MODE
+        GROUP BY PurchaseId__c
+      ];
+    } else {
+      totals = [
+        SELECT
+          PurchaseId__c purchaseId,
+          SUM(Amount__c) itemTotal,
+          SUM(LineTotal__c) grandTotal
+        FROM PurchaseLine__c
+        WHERE PurchaseId__c IN :purchaseIds AND Id NOT IN :excludedLineIds
+        WITH SYSTEM_MODE
+        GROUP BY PurchaseId__c
+      ];
+    }
+    for (AggregateResult total : totals) {
+      Id purchaseId = (Id) total.get('purchaseId');
+      itemTotals.put(purchaseId, (Decimal) total.get('itemTotal'));
+      grandTotals.put(purchaseId, (Decimal) total.get('grandTotal'));
     }
 
     List<Purchase__c> purchases = new List<Purchase__c>();

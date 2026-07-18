@@ -39,13 +39,13 @@ private class PurchaseCheckoutServiceTest {
     Test.stopTest();
 
     Purchase__c purchase = [
-      SELECT Id, ClientId__c, TotalItems__c, GrandTotal__c
+      SELECT Id, OwnerId, ClientId__c, TotalItems__c, GrandTotal__c
       FROM Purchase__c
       WHERE Id = :purchaseId
     ];
     Map<Id, PurchaseLine__c> linesByItem = new Map<Id, PurchaseLine__c>();
     for (PurchaseLine__c line : [
-      SELECT ItemId__c, Amount__c, UnitCost__c
+      SELECT ItemId__c, Amount__c, UnitCost__c, LineTotal__c
       FROM PurchaseLine__c
       WHERE PurchaseId__c = :purchaseId
     ]) {
@@ -53,6 +53,7 @@ private class PurchaseCheckoutServiceTest {
     }
 
     System.Assert.areEqual(account.Id, purchase.ClientId__c);
+    System.Assert.areEqual(UserInfo.getUserId(), purchase.OwnerId);
     System.Assert.areEqual(Decimal.valueOf('6'), purchase.TotalItems__c);
     System.Assert.areEqual(Decimal.valueOf('375.25'), purchase.GrandTotal__c);
     System.Assert.areEqual(2, linesByItem.size());
@@ -65,12 +66,20 @@ private class PurchaseCheckoutServiceTest {
       linesByItem.get(cable.Id).UnitCost__c
     );
     System.Assert.areEqual(
+      Decimal.valueOf('99.75'),
+      linesByItem.get(cable.Id).LineTotal__c
+    );
+    System.Assert.areEqual(
       Decimal.valueOf('1'),
       linesByItem.get(desk.Id).Amount__c
     );
     System.Assert.areEqual(
       Decimal.valueOf('275.50'),
       linesByItem.get(desk.Id).UnitCost__c
+    );
+    System.Assert.areEqual(
+      Decimal.valueOf('275.50'),
+      linesByItem.get(desk.Id).LineTotal__c
     );
     System.Assert.areEqual(
       Decimal.valueOf('15'),

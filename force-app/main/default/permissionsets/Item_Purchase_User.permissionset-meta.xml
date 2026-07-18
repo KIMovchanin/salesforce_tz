@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <applicationVisibilities>
         <application>Item_Purchase</application>
@@ -16,34 +16,72 @@
         <apexClass>PurchaseTotalsFlowAction</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <description>Access to browse items and create purchases from the Item Purchase Tool.</description>
-    <fieldPermissions><editable>false</editable><field>Item__c.AvailableQuantity__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Item__c.Description__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Item__c.Family__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Item__c.Image__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Item__c.Price__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Item__c.Type__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Purchase__c.ClientId__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Purchase__c.GrandTotal__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>Purchase__c.TotalItems__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>PurchaseLine__c.Amount__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>PurchaseLine__c.ItemId__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>PurchaseLine__c.PurchaseId__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>PurchaseLine__c.UnitCost__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field>User.IsManager__c</field><readable>true</readable></fieldPermissions>
+    <description
+  >Access to browse items and create purchases from the Item Purchase Tool.</description>
+    <fieldPermissions><editable>false</editable><field
+    >Item__c.AvailableQuantity__c</field><readable
+    >true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >Item__c.Description__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >Item__c.Family__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >Item__c.Image__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >Item__c.Price__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >Item__c.Type__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >Purchase__c.ClientId__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >Purchase__c.GrandTotal__c</field><readable
+    >true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >Purchase__c.TotalItems__c</field><readable
+    >true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >PurchaseLine__c.Amount__c</field><readable
+    >true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >PurchaseLine__c.ItemId__c</field><readable
+    >true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >PurchaseLine__c.PurchaseId__c</field><readable
+    >true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >PurchaseLine__c.LineTotal__c</field><readable
+    >true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >PurchaseLine__c.UnitCost__c</field><readable
+    >true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >User.IsManager__c</field><readable>true</readable></fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Item Purchase User</label>
     <objectPermissions>
-        <allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Account</object><viewAllRecords>false</viewAllRecords>
+        <allowCreate>false</allowCreate><allowDelete
+    >false</allowDelete><allowEdit>false</allowEdit><allowRead
+    >true</allowRead><modifyAllRecords>false</modifyAllRecords><object
+    >Account</object><viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
-        <allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Item__c</object><viewAllRecords>false</viewAllRecords>
+        <allowCreate>false</allowCreate><allowDelete
+    >false</allowDelete><allowEdit>false</allowEdit><allowRead
+    >true</allowRead><modifyAllRecords>false</modifyAllRecords><object
+    >Item__c</object><viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
-        <allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Purchase__c</object><viewAllRecords>false</viewAllRecords>
+        <allowCreate>false</allowCreate><allowDelete
+    >false</allowDelete><allowEdit>false</allowEdit><allowRead
+    >true</allowRead><modifyAllRecords>false</modifyAllRecords><object
+    >Purchase__c</object><viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
-        <allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>PurchaseLine__c</object><viewAllRecords>false</viewAllRecords>
+        <allowCreate>false</allowCreate><allowDelete
+    >false</allowDelete><allowEdit>false</allowEdit><allowRead
+    >true</allowRead><modifyAllRecords>false</modifyAllRecords><object
+    >PurchaseLine__c</object><viewAllRecords>false</viewAllRecords>
     </objectPermissions>
-    <tabSettings><tab>Item_Purchase_Tool</tab><visibility>Visible</visibility></tabSettings>
+    <tabSettings><tab>Item_Purchase_Tool</tab><visibility
+    >Visible</visibility></tabSettings>
 </PermissionSet>

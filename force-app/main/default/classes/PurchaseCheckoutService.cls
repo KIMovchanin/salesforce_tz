@@ -14,7 +14,7 @@ public with sharing class PurchaseCheckoutService {
         Name = 'Purchase ' + Datetime.now().format('yyyy-MM-dd HH:mm:ss'),
         ClientId__c = accountId
       );
-      Database.insert(purchase, AccessLevel.USER_MODE);
+      Database.insert(purchase, AccessLevel.SYSTEM_MODE);
 
       List<PurchaseLine__c> lines = new List<PurchaseLine__c>();
       for (Item__c item : items) {
@@ -30,7 +30,7 @@ public with sharing class PurchaseCheckoutService {
         item.AvailableQuantity__c -= quantity;
       }
 
-      Database.insert(lines, AccessLevel.USER_MODE);
+      Database.insert(lines, AccessLevel.SYSTEM_MODE);
       Database.update(items, AccessLevel.SYSTEM_MODE);
       return purchase.Id;
     } catch (PurchaseToolException exception) {
