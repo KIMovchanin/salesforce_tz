@@ -176,11 +176,11 @@ Dev Org уже настроена и развёрнута под alias `item-pur
 В Dev Org уже подготовлены:
 
 - Account `Demo Customer`, Id `001dL00002MFkXwQAL`;
-- четыре демонстрационных Item; старые Unsplash URL без достоверной атрибуции намеренно отображаются как placeholder до заполнения данных авторов;
+- четыре демонстрационных Item с проверенными авторами Unsplash и видимой атрибуцией;
 - оба permission set и `User.IsManager__c = true` у текущего пользователя;
 - активный System Administrator с email `dev@truesolv.com`.
 
-Unsplash Access Key пока не настроен. Это блокирует создание новых Item через кнопку `Create item`. Каталог, поиск, фильтры, корзина и checkout доступны; у четырёх старых demo Item вместо Unsplash-фото показывается placeholder, пока не будут заполнены реальные автор и профиль.
+Unsplash Access Key пока не настроен. Это блокирует только создание новых Item через кнопку `Create item`. Каталог, поиск, фильтры, корзина, checkout и четыре подготовленные demo-фотографии с атрибуцией доступны.
 
 ## Предварительные требования
 
@@ -375,7 +375,7 @@ GitHub Actions запускает install, formatting check, ESLint и Jest пр
 | Dev Org deployment                 | Успешно: `0AfdL00000dr5G3SAI`, 70/70 компонентов                                                                    |
 | Apex server tests                  | 29/29 passed, run `707dL00001FITxy`, test-run coverage 92%, org-wide coverage 91%                                   |
 | Admin `dev@truesolv.com`           | Создан и настроен                                                                                                   |
-| Demo data                          | `Demo Customer` и четыре Item созданы; старые фото ожидают attribution backfill                                     |
+| Demo data                          | `Demo Customer` и четыре Item созданы; авторы и профильные URL Unsplash проверены и заполнены                       |
 | Unmanaged package installation URL | Версия 1.2 относится к предыдущему snapshot; текущий deployment в неё не входит                                     |
 | Unsplash Access Key                | Pending; нужен только для создания новых Item                                                                       |
 

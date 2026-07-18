@@ -69,6 +69,15 @@ PurchaseLine зависит и от Purchase, и от Item. Master-Detail даё
 
 Поля хранятся вместе с Item, потому что каталог загружается из Salesforce без повторного API callout для каждой карточки. Если Unsplash URL уже существует, но данные автора отсутствуют или недоверены, общий image component показывает placeholder, а не фотографию без обязательной атрибуции.
 
+Для четырёх demo Item provenance проверена по официальным страницам фотографий:
+
+| Item                   | Фотограф        | Официальный профиль                                       |
+| ---------------------- | --------------- | --------------------------------------------------------- |
+| Desk Lamp              | Jonny Caspari   | [@jonnycspr](https://unsplash.com/@jonnycspr)             |
+| Ergonomic Office Chair | Kam Idris       | [@ka_idris](https://unsplash.com/@ka_idris)               |
+| Notebook Set           | Marissa Grootes | [@marissacristina](https://unsplash.com/@marissacristina) |
+| Wireless Headphones    | C D-X           | [@cdx2](https://unsplash.com/@cdx2)                       |
+
 ### Почему Recipient User — Text(18)
 
 Hierarchy Custom Settings не поддерживают relationship fields. Создать настоящий Lookup(User) в этом типе metadata невозможно.
@@ -392,7 +401,7 @@ Jest не запускает реальный Apex. Apex tests не запуск
 
 Installation URL: [Item Purchase Tool 1.2](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kBtJQAU).
 
-Версия 1.2 предшествует текущему Unsplash attribution/download tracking и исправлениям доступа: текущий snapshot уже развёрнут и проверен, но ещё не включён в новую package version. Четырём demo Item нужен backfill либо замена изображений с реальными данными авторов; до этого UI показывает placeholder вместо неатрибутированного Unsplash-фото. Отдельно остаётся настроить encrypted Unsplash Access Key; без него manager-only создание Item не работает.
+Версия 1.2 предшествует текущему Unsplash attribution/download tracking и исправлениям доступа: текущий snapshot уже развёрнут и проверен, но ещё не включён в новую package version. Для четырёх demo Item выполнен backfill проверенных авторов и профильных URL, поэтому каталог показывает фотографии с видимой атрибуцией. Отдельно остаётся настроить encrypted Unsplash Access Key; без него manager-only создание Item не работает.
 
 ## 12. Как самостоятельно проверить сценарий
 
@@ -405,7 +414,7 @@ Installation URL: [Item Purchase Tool 1.2](https://login.salesforce.com/packagin
 5. Проверьте созданный Purchase, Purchase Lines, `TotalItems` и `GrandTotal`.
 6. Убедитесь, что `Desk Lamp` с нулевым остатком нельзя добавить в Cart.
 
-Для этих действий ничего локально запускать не нужно. Кнопку создания нового Item проверяйте после настройки Unsplash Access Key. Четыре товара доступны сейчас, но их старые Unsplash URL намеренно заменяются placeholder до заполнения достоверной атрибуции.
+Для этих действий ничего локально запускать не нужно. Кнопку создания нового Item проверяйте после настройки Unsplash Access Key. Четыре demo-фотографии уже имеют достоверную атрибуцию и отображаются в каталоге.
 
 ### Каталог
 
