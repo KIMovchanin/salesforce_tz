@@ -221,6 +221,8 @@ Remove-Item Env:UNSPLASH_ACCESS_KEY
 sf org assign permset --name Item_Purchase_User --target-org item-purchase-dev --on-behalf-of user@example.com
 ```
 
+Профиль прикладного пользователя не должен отдельно выдавать Create/Edit на `Purchase__c` и `PurchaseLine__c`: permission set умеет только добавлять права и не может отозвать уже выданные профилем. System Administrator остаётся доверенным исключением с полным доступом.
+
 Менеджеру назначаются оба permission sets. Здесь также используются Salesforce Username:
 
 ```powershell
@@ -284,6 +286,7 @@ Email использует template `Out of Stock Item Notification`. Apex actio
 - пользовательские запросы и Item creation DML используют `WITH USER_MODE`/`AccessLevel.USER_MODE`;
 - system mode ограничен созданием Purchase/Lines через защищённый checkout, пересчётом итогов, складским decrement и чтением заранее настроенного email template;
 - базовый permission set не даёт прямой Create/Edit на Purchase и PurchaseLine, поэтому API или related list не обходят серверную цену и stock decrement;
+- профили прикладных пользователей также не должны давать эти права, поскольку permission set не умеет их отнимать;
 - `Purchase__c` имеет Private OWD, а PurchaseLine наследует доступ от родителя; покупатель видит собственную созданную запись, но не покупки других пользователей;
 - manager status повторно проверяется в Apex;
 - цена и остаток никогда не принимаются от LWC как доверенные значения;
