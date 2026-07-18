@@ -1,0 +1,14 @@
+<template>
+  <template lwc:if={hasImage}>
+    <img src={imageUrl} alt={alternativeText} loading={loading} />
+  </template>
+  <template lwc:else>
+    <div class="placeholder">
+      <lightning-icon
+        icon-name="standard:product_item"
+        size="large"
+        alternative-text="Image unavailable"
+      ></lightning-icon>
+    </div>
+  </template>
+</template>

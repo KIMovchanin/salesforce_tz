@@ -19,19 +19,6 @@
   background: #f3f3f3;
 }
 
-.media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.placeholder {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  place-items: center;
-}
-
 .content {
   display: flex;
   flex: 1;
@@ -75,14 +62,6 @@
   margin-top: auto;
   font-size: 0.75rem;
   font-weight: 700;
-}
-
-.stock_available {
-  color: #2e844a;
-}
-
-.stock_empty {
-  color: #ba0517;
 }
 
 .actions {

@@ -188,9 +188,12 @@ Savepoint ставится до операций. Если строка, Flow, v
 - `itemDetailsModal` — детали;
 - `itemCartModal` — редактирование корзины;
 - `itemCreateModal` — форма менеджера;
-- `modalShell` — единая SLDS modal-разметка и Escape/focus behaviour.
+- `itemImage` — единое изображение или placeholder;
+- `modalShell` — единая SLDS modal-разметка и Escape/focus behaviour;
+- `itemPresentation` — общие description и stock presentation rules;
+- `componentEvents` — единое создание повторяющихся close/item events.
 
-Общая modal shell убирает копирование backdrop, header, footer и accessibility attributes.
+Общие shell, image, presentation и event modules убирают повторение разметки и логики между карточкой и модальными окнами, сохраняя у каждого компонента одну понятную ответственность.
 
 ### Однонаправленный поток данных
 
@@ -361,10 +364,11 @@ Jest не запускает реальный Apex. Apex tests не запуск
 3. Inventory Notification Settings заполнен;
 4. создан System Administrator с email `dev@truesolv.com`;
 5. созданы Account `Demo Customer` (`001dL00002MFkXwQAL`) и четыре demo Item;
-6. Apex run `707dL00001FHl8Z` завершён: 28/28 tests passed, org-wide coverage 92%;
-7. загружен unmanaged package `033dL000000fPdZ`, версия 1.0 `04tdL000000kB25QAE`, 74 components.
+6. Apex run `707dL00001FICH9` завершён: 28/28 tests passed, org-wide coverage 92%;
+7. финальный LWC deduplication deployment `0AfdL00000dqsUzSAI` завершён успешно;
+8. загружен unmanaged package `033dL000000fPdZ`, актуальная версия 1.2 `04tdL000000kBtJQAU`.
 
-Installation URL: [Item Purchase Tool 1.0](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kB25QAE).
+Installation URL: [Item Purchase Tool 1.2](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kBtJQAU).
 
 Из org-specific настроек пока не добавлен только Unsplash Access Key. Поэтому существующие demo images работают, а создание нового Item через Unsplash начнёт работать после отдельной настройки encrypted credential. Исходники опубликованы в приватном репозитории `https://github.com/KIMovchanin/salesforce_tz`, а URL отправлен на `dev@truesolv.com`. Для просмотра репозитория получателю всё равно нужно выдать GitHub-доступ.
 

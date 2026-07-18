@@ -43,16 +43,17 @@ flowchart LR
 
 ### Слои
 
-| Слой            | Компоненты                                                             | Ответственность                                                   |
-| --------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| UI              | `itemPurchaseTool`, `itemTile`, модальные LWC                          | Состояние каталога и корзины, события, валидация ввода, навигация |
-| Application API | `PurchaseToolController`                                               | Узкий `@AuraEnabled`-контракт и стабильные сообщения об ошибках   |
-| Domain services | `ItemCatalogService`, `ItemCreationService`, `PurchaseCheckoutService` | Поиск, создание товара, checkout и правила склада                 |
-| Security        | `PurchaseToolAuthorization`, permission sets                           | Manager gate, CRUD/FLS, sharing и доступ к External Credential    |
-| Integration     | `UnsplashClient`, Named/External Credential                            | Вызов Unsplash без секрета в Apex или Git                         |
-| Automation      | 3 Record-Triggered Flows, 2 invocable Apex actions                     | Итоги Purchase, Bell и email-уведомления                          |
-| Metadata        | Objects, fields, layouts, app, tab, button, template, settings         | Декларативная модель и пользовательский доступ                    |
-| Tests           | 6 Apex test classes, 6 Jest suites                                     | Позитивные, негативные, rollback, Flow и UI-сценарии              |
+| Слой            | Компоненты                                                             | Ответственность                                                      |
+| --------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| UI              | `itemPurchaseTool`, `itemTile`, `itemImage`, модальные LWC             | Состояние каталога и корзины, события, валидация ввода, навигация    |
+| UI utilities    | `itemPresentation`, `componentEvents`, `modalShell`                    | Общие presentation rules, события и SLDS modal shell без копирования |
+| Application API | `PurchaseToolController`                                               | Узкий `@AuraEnabled`-контракт и стабильные сообщения об ошибках      |
+| Domain services | `ItemCatalogService`, `ItemCreationService`, `PurchaseCheckoutService` | Поиск, создание товара, checkout и правила склада                    |
+| Security        | `PurchaseToolAuthorization`, permission sets                           | Manager gate, CRUD/FLS, sharing и доступ к External Credential       |
+| Integration     | `UnsplashClient`, Named/External Credential                            | Вызов Unsplash без секрета в Apex или Git                            |
+| Automation      | 3 Record-Triggered Flows, 2 invocable Apex actions                     | Итоги Purchase, Bell и email-уведомления                             |
+| Metadata        | Objects, fields, layouts, app, tab, button, template, settings         | Декларативная модель и пользовательский доступ                       |
+| Tests           | 6 Apex test classes, 8 Jest suites                                     | Позитивные, негативные, rollback, Flow и UI-сценарии                 |
 
 ### Checkout-транзакция
 
@@ -344,12 +345,13 @@ pnpm test:unit:coverage
 
 Текущий проверенный результат:
 
-- 6 Jest suites, 19 tests — passed;
+- 8 Jest suites, 23 tests — passed;
 - ESLint — passed;
 - Prettier — passed;
 - source-based и manifest-based Salesforce conversion — passed, включая email folder/template;
 - full deployment в Dev Org — success, deployment Id `0AfdL00000dqf8gSAA`;
-- Apex test run `707dL00001FHl8Z`: 28 из 28 tests — passed;
+- LWC deduplication deployments — success, latest Id `0AfdL00000dqsUzSAI`;
+- Apex test run `707dL00001FICH9`: 28 из 28 tests — passed;
 - org-wide Apex coverage — 92%;
 - Apex tests не используют `SeeAllData=true`.
 
@@ -359,16 +361,16 @@ GitHub Actions запускает install, formatting check, ESLint и Jest пр
 
 ## Delivery
 
-| Результат                          | Текущий статус                                                        |
-| ---------------------------------- | --------------------------------------------------------------------- |
-| GitHub repository URL              | Приватный репозиторий: `https://github.com/KIMovchanin/salesforce_tz` |
-| Email с repository URL             | Отправлен на `dev@truesolv.com`; для просмотра нужен GitHub-доступ    |
-| Dev Org deployment                 | Выполнен в `item-purchase-dev`, deployment Id `0AfdL00000dqf8gSAA`    |
-| Apex server tests                  | 28/28 passed, run `707dL00001FHl8Z`, org-wide coverage 92%            |
-| Admin `dev@truesolv.com`           | Создан и настроен                                                     |
-| Demo data                          | `Demo Customer` и четыре Item созданы                                 |
-| Unmanaged package installation URL | Готова версия 1.0 из 74 компонентов                                   |
-| Unsplash Access Key                | Pending; нужен только для создания новых Item                         |
+| Результат                          | Текущий статус                                                           |
+| ---------------------------------- | ------------------------------------------------------------------------ |
+| GitHub repository URL              | Приватный репозиторий: `https://github.com/KIMovchanin/salesforce_tz`    |
+| Email с repository URL             | Отправлен на `dev@truesolv.com`; для просмотра нужен GitHub-доступ       |
+| Dev Org deployment                 | Full deploy `0AfdL00000dqf8gSAA`, latest LWC update `0AfdL00000dqsUzSAI` |
+| Apex server tests                  | 28/28 passed, run `707dL00001FICH9`, org-wide coverage 92%               |
+| Admin `dev@truesolv.com`           | Создан и настроен                                                        |
+| Demo data                          | `Demo Customer` и четыре Item созданы                                    |
+| Unmanaged package installation URL | Готова актуальная версия 1.2                                             |
+| Unsplash Access Key                | Pending; нужен только для создания новых Item                            |
 
 ## Unmanaged package
 
@@ -376,11 +378,12 @@ Unmanaged package уже создан и загружен:
 
 - package: `Item Purchase Tool`;
 - package Id: `033dL000000fPdZ`;
-- version: `1.0`;
-- version Id: `04tdL000000kB25QAE`;
-- состав: 74 metadata components.
+- version: `1.2`;
+- version Id: `04tdL000000kBtJQAU`;
+- upload request: `0HDdL0000000253WAA`;
+- status: `SUCCESS`.
 
-[Установить Item Purchase Tool 1.0 в другую Salesforce org](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kB25QAE)
+[Установить Item Purchase Tool 1.2 в другую Salesforce org](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kBtJQAU)
 
 Access Key и записи Hierarchy Custom Setting не входят в package и настраиваются в каждой установленной org отдельно. Unmanaged package не поддерживает upgrades; повторное распространение выполняется новым package или source deployment.
 

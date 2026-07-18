@@ -1,4 +1,5 @@
 import { api, LightningElement } from "lwc";
+import { dispatchCloseEvent } from "c/componentEvents";
 
 export default class ItemCreateModal extends LightningElement {
   @api typeOptions = [];
@@ -20,8 +21,7 @@ export default class ItemCreateModal extends LightningElement {
   }
 
   handleClose(event) {
-    event?.stopPropagation();
-    this.dispatchEvent(new CustomEvent("close"));
+    dispatchCloseEvent(this, event);
   }
 
   handleSave() {

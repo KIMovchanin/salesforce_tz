@@ -1,4 +1,5 @@
 import { api, LightningElement } from "lwc";
+import { dispatchCloseEvent } from "c/componentEvents";
 
 export default class ItemCartModal extends LightningElement {
   @api items = [];
@@ -41,8 +42,7 @@ export default class ItemCartModal extends LightningElement {
   }
 
   handleClose(event) {
-    event?.stopPropagation();
-    this.dispatchEvent(new CustomEvent("close"));
+    dispatchCloseEvent(this, event);
   }
 
   handleQuantityChange(event) {
