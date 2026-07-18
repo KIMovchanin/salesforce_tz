@@ -407,7 +407,7 @@ Jest не запускает реальный Apex. Apex tests не запуск
 
 Installation URL: [Item Purchase Tool 1.2](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kBtJQAU).
 
-Версия 1.2 предшествует текущему Unsplash attribution/download tracking и исправлениям доступа: текущий snapshot уже развёрнут и проверен, но ещё не включён в новую package version. Для четырёх demo Item выполнен backfill проверенных авторов и профильных URL, поэтому каталог показывает фотографии с видимой атрибуцией. Отдельно остаётся настроить encrypted Unsplash Access Key; без него manager-only создание Item не работает.
+Версия 1.2 предшествует текущему Unsplash attribution/download tracking и исправлениям доступа: текущий snapshot уже развёрнут и проверен, но ещё не включён в новую package version. Для четырёх demo Item выполнен backfill проверенных авторов и профильных URL, поэтому каталог показывает фотографии с видимой атрибуцией. Encrypted Unsplash Access Key настроен в Dev Org, а реальный серверный поиск фотографии и данных автора завершился успешно.
 
 ## 12. Как самостоятельно проверить сценарий
 
@@ -420,7 +420,7 @@ Installation URL: [Item Purchase Tool 1.2](https://login.salesforce.com/packagin
 5. Проверьте созданный Purchase, Purchase Lines, `TotalItems` и `GrandTotal`.
 6. Убедитесь, что `Desk Lamp` с нулевым остатком нельзя добавить в Cart.
 
-Для этих действий ничего локально запускать не нужно. Кнопку создания нового Item проверяйте после настройки Unsplash Access Key. Четыре demo-фотографии уже имеют достоверную атрибуцию и отображаются в каталоге.
+Для этих действий ничего локально запускать не нужно. Кнопка создания нового Item также готова к проверке: Unsplash Access Key уже настроен. Четыре demo-фотографии имеют достоверную атрибуцию и отображаются в каталоге.
 
 ### Каталог
 

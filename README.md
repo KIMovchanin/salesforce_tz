@@ -227,7 +227,7 @@ sf project deploy start --manifest manifest/package.xml --target-org item-purcha
 
 ## Post-install конфигурация
 
-В текущей Dev Org permission sets, manager flag, получатели уведомлений, проверочный администратор и demo data уже настроены. Отдельно остаётся добавить только Unsplash Access Key, если нужно создавать новые Item.
+В текущей Dev Org permission sets, manager flag, получатели уведомлений, проверочный администратор, demo data и Unsplash Access Key уже настроены. Серверный запрос к Unsplash через Named Credential проверен отдельно.
 
 ### 1. Unsplash Access Key
 
@@ -236,9 +236,17 @@ sf project deploy start --manifest manifest/package.xml --target-org item-purcha
 В Unsplash Developers откройте `Your apps` → `New Application`, лично подтвердите четыре API Guidelines и примите API Terms, затем создайте demo application и скопируйте Access Key. Принятие юридических условий нельзя делегировать; ключ нельзя присылать в чат или добавлять в репозиторий.
 
 ```powershell
-$env:UNSPLASH_ACCESS_KEY = 'your-access-key'
-pnpm configure:unsplash item-purchase-dev
-Remove-Item Env:UNSPLASH_ACCESS_KEY
+$env:UNSPLASH_ACCESS_KEY = [System.Net.NetworkCredential]::new(
+  '',
+  (Read-Host 'Unsplash Access Key' -AsSecureString)
+).Password
+
+try {
+  pnpm configure:unsplash item-purchase-dev
+}
+finally {
+  Remove-Item Env:UNSPLASH_ACCESS_KEY -ErrorAction SilentlyContinue
+}
 ```
 
 Скрипт передаёт ключ в Connect REST API через stdin. Ключ не записывается в файл и не попадает в командную строку дочернего процесса.
