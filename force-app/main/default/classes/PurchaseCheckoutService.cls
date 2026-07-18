@@ -12,9 +12,7 @@ public with sharing class PurchaseCheckoutService {
 
       Purchase__c purchase = new Purchase__c(
         Name = 'Purchase ' + Datetime.now().format('yyyy-MM-dd HH:mm:ss'),
-        ClientId__c = accountId,
-        TotalItems__c = 0,
-        GrandTotal__c = 0
+        ClientId__c = accountId
       );
       Database.insert(purchase, AccessLevel.USER_MODE);
 
@@ -118,7 +116,6 @@ public with sharing class PurchaseCheckoutService {
       FROM Item__c
       WHERE Id IN :itemIds
       WITH USER_MODE
-      ORDER BY Id
       FOR UPDATE
     ];
     if (items.size() != itemIds.size()) {

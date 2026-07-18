@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <actionCalls>
+        <name>Recalculate_Totals_Without_Deleted_Line</name>
+        <label>Recalculate Totals Without Deleted Line</label>
+        <locationX>176</locationX>
+        <locationY>239</locationY>
+        <actionName>PurchaseTotalsFlowAction</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>excludedLineId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>purchaseId</name>
+            <value>
+                <elementReference>$Record.PurchaseId__c</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>PurchaseTotalsFlowAction</nameSegment>
+    </actionCalls>
+    <description>Recalculates Purchase totals before a Purchase Line is deleted.</description>
+    <interviewLabel>Purchase Line Totals Before Delete {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Purchase Line Totals Before Delete</label>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Recalculate_Totals_Without_Deleted_Line</targetReference>
+        </connector>
+        <object>PurchaseLine__c</object>
+        <recordTriggerType>Delete</recordTriggerType>
+        <triggerType>RecordBeforeDelete</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>
+

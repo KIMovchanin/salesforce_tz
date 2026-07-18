@@ -26,7 +26,7 @@
     </types>
     <types>
         <members>*</members>
-        <name>CustomWebLink</name>
+        <name>WebLink</name>
     </types>
     <types>
         <members>*</members>
@@ -34,15 +34,19 @@
     </types>
     <types>
         <members>*</members>
-        <name>EmailFolder</name>
-    </types>
-    <types>
-        <members>*</members>
         <name>EmailTemplate</name>
     </types>
     <types>
         <members>*</members>
+        <name>ExternalCredential</name>
+    </types>
+    <types>
+        <members>*</members>
         <name>Flow</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>FlexiPage</name>
     </types>
     <types>
         <members>*</members>
@@ -66,4 +70,3 @@
     </types>
     <version>67.0</version>
 </Package>
-

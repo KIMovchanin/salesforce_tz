@@ -1,5 +1,5 @@
 module.exports = {
-    plugins: ["prettier-plugin-apex"],
+    plugins: ["prettier-plugin-apex", "@prettier/plugin-xml"],
     trailingComma: "none",
     overrides: [
         {
@@ -12,4 +12,3 @@ module.exports = {
         }
     ]
 };
-

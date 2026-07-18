@@ -1,0 +1,20 @@
+Hello,
+
+The following item is currently out of stock and requires your attention.
+
+Item Details:
+
+Name: {!Item__c.Name}
+
+Type: {!Item__c.Type__c}
+
+Family: {!Item__c.Family__c}
+
+Available Quantity: {!Item__c.AvailableQuantity__c}
+
+Please review the inventory and arrange replenishment.
+
+Thank you,
+
+Inventory Management System
+
