@@ -180,7 +180,7 @@ Dev Org уже настроена и развёрнута под alias `item-pur
 - оба permission set и `User.IsManager__c = true` у текущего пользователя;
 - активный System Administrator с email `dev@truesolv.com`.
 
-Unsplash Access Key пока не настроен. Это блокирует только создание новых Item через кнопку `Create item`. Каталог, поиск, фильтры, корзина, checkout и четыре подготовленные demo-фотографии с атрибуцией доступны.
+Unsplash Access Key настроен в Dev Org как зашифрованный параметр External Credential. Серверный поиск фотографии и данных автора через Named Credential проверен реальным callout; значение ключа не хранится в проекте.
 
 ## Предварительные требования
 
@@ -381,7 +381,7 @@ GitHub Actions запускает install, formatting check, ESLint и Jest пр
 | Admin `dev@truesolv.com`           | Создан и настроен                                                                                                   |
 | Demo data                          | `Demo Customer` и четыре Item созданы; авторы и профильные URL Unsplash проверены и заполнены                       |
 | Unmanaged package installation URL | Версия 1.2 относится к предыдущему snapshot; текущий deployment в неё не входит                                     |
-| Unsplash Access Key                | Pending; нужен только для создания новых Item                                                                       |
+| Unsplash Access Key                | Настроен в Dev Org; серверный callout к Unsplash успешно проверен                                                    |
 
 ## Unmanaged package
 

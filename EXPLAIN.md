@@ -314,6 +314,8 @@ Tracking использует тот же Named Credential и относител
 
 Сначала владелец Unsplash-аккаунта сам открывает `Your apps` → `New Application`, отмечает четыре API Guidelines и принимает API Terms. Это юридическое согласие нельзя безопасно выполнить за владельца. После создания demo application Access Key настраивается по командам из README локально через переменную окружения; в чат, файл и Git ключ не копируется.
 
+В текущей Dev Org ключ настроен как encrypted credential. Реальный серверный поиск Unsplash подтвердил, что Named Credential добавляет авторизацию, а `UnsplashClient` получает и валидирует изображение и данные автора.
+
 Manager permission set содержит:
 
 - доступ к principal External Credential;
