@@ -1,22 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Additional Item creation and editing access for inventory managers.</description>
+    <description
+  >Additional Item creation and editing access for inventory managers.</description>
     <externalCredentialPrincipalAccesses>
         <enabled>true</enabled>
-        <externalCredentialPrincipal>Unsplash_API_Key-Unsplash_Principal</externalCredentialPrincipal>
+        <externalCredentialPrincipal
+    >Unsplash_API_Key-Unsplash_Principal</externalCredentialPrincipal>
     </externalCredentialPrincipalAccesses>
-    <fieldPermissions><editable>true</editable><field>Item__c.AvailableQuantity__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Item__c.Description__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Item__c.Family__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Item__c.Image__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Item__c.Price__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Item__c.Type__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>true</editable><field
+    >Item__c.AvailableQuantity__c</field><readable
+    >true</readable></fieldPermissions>
+    <fieldPermissions><editable>true</editable><field
+    >Item__c.Description__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>true</editable><field
+    >Item__c.Family__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>true</editable><field
+    >Item__c.Image__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>true</editable><field
+    >Item__c.Price__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>true</editable><field
+    >Item__c.Type__c</field><readable>true</readable></fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Item Purchase Manager</label>
     <objectPermissions>
-        <allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>true</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>Item__c</object><viewAllRecords>false</viewAllRecords>
+        <allowCreate>true</allowCreate><allowDelete
+    >false</allowDelete><allowEdit>true</allowEdit><allowRead
+    >true</allowRead><modifyAllRecords>false</modifyAllRecords><object
+    >Item__c</object><viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
-        <allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit><allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><object>UserExternalCredential</object><viewAllRecords>true</viewAllRecords>
+        <allowCreate>false</allowCreate><allowDelete
+    >false</allowDelete><allowEdit>false</allowEdit><allowRead
+    >true</allowRead><modifyAllRecords>false</modifyAllRecords><object
+    >UserExternalCredential</object><viewAllRecords>true</viewAllRecords>
     </objectPermissions>
 </PermissionSet>

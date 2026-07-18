@@ -2,10 +2,7 @@
   "packageDirectories": [
     {
       "path": "force-app",
-      "default": true,
-      "package": "Item Purchase Tool",
-      "versionName": "Version 1.0",
-      "versionNumber": "1.0.0.NEXT"
+      "default": true
     }
   ],
   "name": "item-purchase-tool",
@@ -13,4 +10,3 @@
   "sfdcLoginUrl": "https://login.salesforce.com",
   "sourceApiVersion": "67.0"
 }
-

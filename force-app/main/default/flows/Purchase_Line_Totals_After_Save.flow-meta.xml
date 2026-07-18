@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>67.0</apiVersion>
     <actionCalls>
@@ -17,8 +17,10 @@
         </inputParameters>
         <nameSegment>PurchaseTotalsFlowAction</nameSegment>
     </actionCalls>
-    <description>Recalculates Purchase totals after Purchase Lines are created or updated.</description>
-    <interviewLabel>Purchase Line Totals After Save {!$Flow.CurrentDateTime}</interviewLabel>
+    <description
+  >Recalculates Purchase totals after Purchase Lines are created or updated.</description>
+    <interviewLabel
+  >Purchase Line Totals After Save {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Purchase Line Totals After Save</label>
     <processType>AutoLaunchedFlow</processType>
     <start>
@@ -33,4 +35,3 @@
     </start>
     <status>Active</status>
 </Flow>
-

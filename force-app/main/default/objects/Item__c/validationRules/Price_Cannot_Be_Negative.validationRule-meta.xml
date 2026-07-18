@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Price_Cannot_Be_Negative</fullName>
     <active>true</active>
@@ -6,4 +6,3 @@
     <errorDisplayField>Price__c</errorDisplayField>
     <errorMessage>Price cannot be negative.</errorMessage>
 </ValidationRule>
-

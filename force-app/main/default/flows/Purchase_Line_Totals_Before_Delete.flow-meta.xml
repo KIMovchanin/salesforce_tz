@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>67.0</apiVersion>
     <actionCalls>
@@ -23,15 +23,18 @@
         </inputParameters>
         <nameSegment>PurchaseTotalsFlowAction</nameSegment>
     </actionCalls>
-    <description>Recalculates Purchase totals before a Purchase Line is deleted.</description>
-    <interviewLabel>Purchase Line Totals Before Delete {!$Flow.CurrentDateTime}</interviewLabel>
+    <description
+  >Recalculates Purchase totals before a Purchase Line is deleted.</description>
+    <interviewLabel
+  >Purchase Line Totals Before Delete {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Purchase Line Totals Before Delete</label>
     <processType>AutoLaunchedFlow</processType>
     <start>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Recalculate_Totals_Without_Deleted_Line</targetReference>
+            <targetReference
+      >Recalculate_Totals_Without_Deleted_Line</targetReference>
         </connector>
         <object>PurchaseLine__c</object>
         <recordTriggerType>Delete</recordTriggerType>
@@ -39,4 +42,3 @@
     </start>
     <status>Active</status>
 </Flow>
-

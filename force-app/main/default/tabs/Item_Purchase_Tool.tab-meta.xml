@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Item purchase application page.</description>
     <flexiPage>Item_Purchase_Tool</flexiPage>
     <label>Item Purchase Tool</label>
     <motif>Custom53: Bell</motif>
 </CustomTab>
-

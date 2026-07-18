@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <layoutSections>
         <customLabel>false</customLabel>
@@ -6,15 +6,22 @@
         <editHeading>true</editHeading>
         <label>Item Information</label>
         <layoutColumns>
-            <layoutItems><behavior>Required</behavior><field>Name</field></layoutItems>
-            <layoutItems><behavior>Required</behavior><field>Type__c</field></layoutItems>
-            <layoutItems><behavior>Required</behavior><field>Price__c</field></layoutItems>
+            <layoutItems><behavior>Required</behavior><field
+        >Name</field></layoutItems>
+            <layoutItems><behavior>Required</behavior><field
+        >Type__c</field></layoutItems>
+            <layoutItems><behavior>Required</behavior><field
+        >Price__c</field></layoutItems>
         </layoutColumns>
         <layoutColumns>
-            <layoutItems><behavior>Edit</behavior><field>Description__c</field></layoutItems>
-            <layoutItems><behavior>Required</behavior><field>Family__c</field></layoutItems>
-            <layoutItems><behavior>Required</behavior><field>AvailableQuantity__c</field></layoutItems>
-            <layoutItems><behavior>Edit</behavior><field>Image__c</field></layoutItems>
+            <layoutItems><behavior>Edit</behavior><field
+        >Description__c</field></layoutItems>
+            <layoutItems><behavior>Required</behavior><field
+        >Family__c</field></layoutItems>
+            <layoutItems><behavior>Required</behavior><field
+        >AvailableQuantity__c</field></layoutItems>
+            <layoutItems><behavior>Edit</behavior><field
+        >Image__c</field></layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>
@@ -30,4 +37,3 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
 </Layout>
-
