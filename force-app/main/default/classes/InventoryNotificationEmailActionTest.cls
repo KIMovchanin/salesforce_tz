@@ -84,6 +84,7 @@ private class InventoryNotificationEmailActionTest {
       SELECT Id
       FROM Account
       WHERE Name = 'Test Account Email'
+      WITH SYSTEM_MODE
       LIMIT 1
     ];
     List<InventoryNotificationEmailAction.Request> requests = new List<InventoryNotificationEmailAction.Request>{
@@ -115,9 +116,12 @@ private class InventoryNotificationEmailActionTest {
   @IsTest
   static void outOfStockFlowSendsEmailOnTheZeroQuantityTransition() {
     createTestTemplate();
-    insert new Inventory_Notification_Settings__c(
-      SetupOwnerId = UserInfo.getOrganizationId(),
-      Recipient_Email__c = 'inventory@example.com'
+    Database.insert(
+      new Inventory_Notification_Settings__c(
+        SetupOwnerId = UserInfo.getOrganizationId(),
+        Recipient_Email__c = 'inventory@example.com'
+      ),
+      AccessLevel.SYSTEM_MODE
     );
     Item__c item = emailItem();
     item.AvailableQuantity__c = 0;
@@ -125,11 +129,12 @@ private class InventoryNotificationEmailActionTest {
       SELECT Id
       FROM User
       WHERE Id = :UserInfo.getUserId()
+      WITH SYSTEM_MODE
     ];
 
     Test.startTest();
     System.runAs(currentUser) {
-      update item;
+      Database.update(item, AccessLevel.SYSTEM_MODE);
     }
     Integer emailInvocations = Limits.getEmailInvocations();
     Test.stopTest();
@@ -137,7 +142,12 @@ private class InventoryNotificationEmailActionTest {
     System.Assert.areEqual(1, emailInvocations);
     System.Assert.areEqual(
       Decimal.valueOf('0'),
-      [SELECT AvailableQuantity__c FROM Item__c WHERE Id = :item.Id]
+      [
+        SELECT AvailableQuantity__c
+        FROM Item__c
+        WHERE Id = :item.Id
+        WITH SYSTEM_MODE
+      ]
       .AvailableQuantity__c
     );
   }
@@ -145,23 +155,31 @@ private class InventoryNotificationEmailActionTest {
   @IsTest
   static void invalidBellRecipientFallsBackToEmailWithoutBlockingStock() {
     createTestTemplate();
-    insert new Inventory_Notification_Settings__c(
-      SetupOwnerId = UserInfo.getOrganizationId(),
-      Recipient_User__c = 'INVALIDUSERID00000',
-      Recipient_Email__c = 'inventory@example.com'
+    Database.insert(
+      new Inventory_Notification_Settings__c(
+        SetupOwnerId = UserInfo.getOrganizationId(),
+        Recipient_User__c = 'INVALIDUSERID00000',
+        Recipient_Email__c = 'inventory@example.com'
+      ),
+      AccessLevel.SYSTEM_MODE
     );
     Item__c item = emailItem();
     item.AvailableQuantity__c = 0;
 
     Test.startTest();
-    update item;
+    Database.update(item, AccessLevel.SYSTEM_MODE);
     Integer emailInvocations = Limits.getEmailInvocations();
     Test.stopTest();
 
     System.Assert.areEqual(1, emailInvocations);
     System.Assert.areEqual(
       Decimal.valueOf('0'),
-      [SELECT AvailableQuantity__c FROM Item__c WHERE Id = :item.Id]
+      [
+        SELECT AvailableQuantity__c
+        FROM Item__c
+        WHERE Id = :item.Id
+        WITH SYSTEM_MODE
+      ]
       .AvailableQuantity__c
     );
   }
@@ -171,6 +189,7 @@ private class InventoryNotificationEmailActionTest {
       SELECT Id
       FROM Item__c
       WHERE Name = 'Email Test Item'
+      WITH SYSTEM_MODE
       LIMIT 1
     ];
   }
@@ -198,6 +217,6 @@ private class InventoryNotificationEmailActionTest {
       Subject = 'Out of Stock Alert',
       TemplateType = 'text'
     );
-    insert template;
+    Database.insert(template, AccessLevel.SYSTEM_MODE);
   }
 }

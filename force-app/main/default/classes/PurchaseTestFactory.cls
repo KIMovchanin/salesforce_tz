@@ -2,7 +2,7 @@
 public class PurchaseTestFactory {
   public static Account createAccount(String label) {
     Account account = new Account(Name = 'Test Account ' + label);
-    insert account;
+    Database.insert(account, AccessLevel.SYSTEM_MODE);
     return account;
   }
 
@@ -40,7 +40,7 @@ public class PurchaseTestFactory {
       price,
       availableQuantity
     );
-    insert item;
+    Database.insert(item, AccessLevel.SYSTEM_MODE);
     return item;
   }
 
@@ -49,7 +49,7 @@ public class PurchaseTestFactory {
       Name = 'Test Purchase ' + label,
       ClientId__c = account.Id
     );
-    insert purchase;
+    Database.insert(purchase, AccessLevel.SYSTEM_MODE);
     return purchase;
   }
 
@@ -90,8 +90,39 @@ public class PurchaseTestFactory {
       TimeZoneSidKey = 'America/Los_Angeles',
       UserName = 'user.' + unique + '@example.com'
     );
-    insert user;
+    Database.insert(user, AccessLevel.SYSTEM_MODE);
     return user;
+  }
+
+  public static void assignPermissionSets(
+    Id userId,
+    Set<String> permissionSetNames
+  ) {
+    if (permissionSetNames == null || permissionSetNames.isEmpty()) {
+      return;
+    }
+
+    List<PermissionSetAssignment> assignments = new List<PermissionSetAssignment>();
+    for (PermissionSet permission : [
+      SELECT Id
+      FROM PermissionSet
+      WHERE Name IN :permissionSetNames
+      WITH SYSTEM_MODE
+    ]) {
+      assignments.add(
+        new PermissionSetAssignment(
+          AssigneeId = userId,
+          PermissionSetId = permission.Id
+        )
+      );
+    }
+
+    System.Assert.areEqual(
+      permissionSetNames.size(),
+      assignments.size(),
+      'Every requested permission set must exist.'
+    );
+    Database.insert(assignments, AccessLevel.SYSTEM_MODE);
   }
 
   public static String repeat(String value, Integer count) {

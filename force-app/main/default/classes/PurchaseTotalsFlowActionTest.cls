@@ -21,7 +21,7 @@ private class PurchaseTotalsFlowActionTest {
         50
       )
     };
-    insert items;
+    Database.insert(items, AccessLevel.SYSTEM_MODE);
     Purchase__c firstPurchase = PurchaseTestFactory.createPurchase(
       account,
       'Totals One'
@@ -30,11 +30,14 @@ private class PurchaseTotalsFlowActionTest {
       account,
       'Totals Two'
     );
-    insert new List<PurchaseLine__c>{
-      PurchaseTestFactory.lineRecord(firstPurchase, items[0], 2, 10),
-      PurchaseTestFactory.lineRecord(firstPurchase, items[1], 3, 25),
-      PurchaseTestFactory.lineRecord(secondPurchase, items[0], 4, 7.5)
-    };
+    Database.insert(
+      new List<PurchaseLine__c>{
+        PurchaseTestFactory.lineRecord(firstPurchase, items[0], 2, 10),
+        PurchaseTestFactory.lineRecord(firstPurchase, items[1], 3, 25),
+        PurchaseTestFactory.lineRecord(secondPurchase, items[0], 4, 7.5)
+      },
+      AccessLevel.SYSTEM_MODE
+    );
   }
 
   @IsTest
@@ -45,20 +48,24 @@ private class PurchaseTotalsFlowActionTest {
       SELECT Id
       FROM PurchaseLine__c
       WHERE PurchaseId__c = :firstPurchase.Id AND Amount__c = 3
+      WITH SYSTEM_MODE
       LIMIT 1
     ];
-    update new List<Purchase__c>{
-      new Purchase__c(
-        Id = firstPurchase.Id,
-        TotalItems__c = 999,
-        GrandTotal__c = 999
-      ),
-      new Purchase__c(
-        Id = secondPurchase.Id,
-        TotalItems__c = 999,
-        GrandTotal__c = 999
-      )
-    };
+    Database.update(
+      new List<Purchase__c>{
+        new Purchase__c(
+          Id = firstPurchase.Id,
+          TotalItems__c = 999,
+          GrandTotal__c = 999
+        ),
+        new Purchase__c(
+          Id = secondPurchase.Id,
+          TotalItems__c = 999,
+          GrandTotal__c = 999
+        )
+      },
+      AccessLevel.SYSTEM_MODE
+    );
     PurchaseTotalsFlowAction.Request firstRequest = totalsRequest(
       firstPurchase.Id,
       excludedLine.Id
@@ -85,6 +92,7 @@ private class PurchaseTotalsFlowActionTest {
         SELECT Id, TotalItems__c, GrandTotal__c
         FROM Purchase__c
         WHERE Id IN :purchaseIds
+        WITH SYSTEM_MODE
       ]
     );
     System.Assert.areEqual(
@@ -111,6 +119,7 @@ private class PurchaseTotalsFlowActionTest {
       SELECT Id
       FROM Account
       WHERE Name = 'Test Account Totals'
+      WITH SYSTEM_MODE
       LIMIT 1
     ];
     Purchase__c purchase = PurchaseTestFactory.createPurchase(
@@ -119,7 +128,7 @@ private class PurchaseTotalsFlowActionTest {
     );
     purchase.TotalItems__c = 7;
     purchase.GrandTotal__c = 77;
-    update purchase;
+    Database.update(purchase, AccessLevel.SYSTEM_MODE);
 
     Test.startTest();
     PurchaseTotalsFlowAction.recalculate(
@@ -133,6 +142,7 @@ private class PurchaseTotalsFlowActionTest {
       SELECT TotalItems__c, GrandTotal__c
       FROM Purchase__c
       WHERE Id = :purchase.Id
+      WITH SYSTEM_MODE
     ];
     System.Assert.areEqual(Decimal.valueOf('0'), purchase.TotalItems__c);
     System.Assert.areEqual(Decimal.valueOf('0'), purchase.GrandTotal__c);
@@ -145,17 +155,19 @@ private class PurchaseTotalsFlowActionTest {
       SELECT Id
       FROM PurchaseLine__c
       WHERE PurchaseId__c = :purchase.Id AND Amount__c = 3
+      WITH SYSTEM_MODE
       LIMIT 1
     ];
 
     Test.startTest();
-    delete lineToDelete;
+    Database.delete(lineToDelete, AccessLevel.SYSTEM_MODE);
     Test.stopTest();
 
     purchase = [
       SELECT TotalItems__c, GrandTotal__c
       FROM Purchase__c
       WHERE Id = :purchase.Id
+      WITH SYSTEM_MODE
     ];
     System.Assert.areEqual(Decimal.valueOf('2'), purchase.TotalItems__c);
     System.Assert.areEqual(Decimal.valueOf('20'), purchase.GrandTotal__c);
@@ -165,6 +177,7 @@ private class PurchaseTotalsFlowActionTest {
         SELECT COUNT()
         FROM PurchaseLine__c
         WHERE PurchaseId__c = :purchase.Id
+        WITH SYSTEM_MODE
       ]
     );
   }
@@ -174,7 +187,7 @@ private class PurchaseTotalsFlowActionTest {
     Purchase__c purchase = purchaseByName('Test Purchase Totals One');
     purchase.TotalItems__c = 12;
     purchase.GrandTotal__c = 120;
-    update purchase;
+    Database.update(purchase, AccessLevel.SYSTEM_MODE);
 
     Test.startTest();
     PurchaseTotalsFlowAction.recalculate(
@@ -189,6 +202,7 @@ private class PurchaseTotalsFlowActionTest {
       SELECT TotalItems__c, GrandTotal__c
       FROM Purchase__c
       WHERE Id = :purchase.Id
+      WITH SYSTEM_MODE
     ];
     System.Assert.areEqual(Decimal.valueOf('12'), purchase.TotalItems__c);
     System.Assert.areEqual(Decimal.valueOf('120'), purchase.GrandTotal__c);
@@ -199,6 +213,7 @@ private class PurchaseTotalsFlowActionTest {
       SELECT Id, TotalItems__c, GrandTotal__c
       FROM Purchase__c
       WHERE Name = :name
+      WITH SYSTEM_MODE
       LIMIT 1
     ];
   }

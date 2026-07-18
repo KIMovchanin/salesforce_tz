@@ -37,28 +37,14 @@ private class ItemCreationServiceTest {
   static void createAuthorizationUsers() {
     User manager = PurchaseTestFactory.createUser(true, 'Manager');
     User standardUser = PurchaseTestFactory.createUser(false, 'Standard User');
-    Map<String, PermissionSet> permissionsByName = new Map<String, PermissionSet>();
-    for (PermissionSet permission : [
-      SELECT Id, Name
-      FROM PermissionSet
-      WHERE Name IN ('Item_Purchase_User', 'Item_Purchase_Manager')
-    ]) {
-      permissionsByName.put(permission.Name, permission);
-    }
-    insert new List<PermissionSetAssignment>{
-      new PermissionSetAssignment(
-        AssigneeId = manager.Id,
-        PermissionSetId = permissionsByName.get('Item_Purchase_User').Id
-      ),
-      new PermissionSetAssignment(
-        AssigneeId = manager.Id,
-        PermissionSetId = permissionsByName.get('Item_Purchase_Manager').Id
-      ),
-      new PermissionSetAssignment(
-        AssigneeId = standardUser.Id,
-        PermissionSetId = permissionsByName.get('Item_Purchase_User').Id
-      )
-    };
+    PurchaseTestFactory.assignPermissionSets(
+      manager.Id,
+      new Set<String>{ 'Item_Purchase_User', 'Item_Purchase_Manager' }
+    );
+    PurchaseTestFactory.assignPermissionSets(
+      standardUser.Id,
+      new Set<String>{ 'Item_Purchase_User' }
+    );
   }
 
   @IsTest
@@ -101,6 +87,7 @@ private class ItemCreationServiceTest {
         AvailableQuantity__c
       FROM Item__c
       WHERE Id = :createdItem.Id
+      WITH SYSTEM_MODE
     ];
     System.Assert.areEqual('Desk Lamp', createdItem.Name);
     System.Assert.areEqual('Adjustable light', createdItem.Description__c);
@@ -145,7 +132,7 @@ private class ItemCreationServiceTest {
       Test.stopTest();
     }
 
-    System.Assert.areEqual(0, [SELECT COUNT() FROM Item__c]);
+    System.Assert.areEqual(0, [SELECT COUNT() FROM Item__c WITH SYSTEM_MODE]);
   }
 
   @IsTest
@@ -302,6 +289,7 @@ private class ItemCreationServiceTest {
       SELECT Id, IsManager__c
       FROM User
       WHERE LastName = :lastName
+      WITH SYSTEM_MODE
       LIMIT 1
     ];
   }
