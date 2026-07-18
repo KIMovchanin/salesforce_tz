@@ -375,7 +375,7 @@ pnpm test:unit:coverage
 - отдельный Apex run `707dL00001FIrxu`: 32/32 tests passed, test-run coverage 92%, org-wide coverage 91%;
 - Apex tests не используют `SeeAllData=true`.
 
-Текущий Unsplash/FLS hardening развёрнут в Dev Org и прошёл полный отдельный `RunLocalTests`. Unmanaged package 1.2 был загружен раньше и эту версию ещё не содержит.
+Текущий Unsplash/FLS hardening развёрнут в Dev Org, прошёл полный отдельный `RunLocalTests` и включён в unmanaged package 1.3.
 
 GitHub Actions запускает install, formatting check, ESLint и Jest при push в `main` и для pull request.
 
@@ -388,23 +388,23 @@ GitHub Actions запускает install, formatting check, ESLint и Jest пр
 | Apex server tests                  | 32/32 passed, run `707dL00001FIrxu`, test-run coverage 92%, org-wide coverage 91%                                   |
 | Admin `dev@truesolv.com`           | Создан и настроен                                                                                                   |
 | Demo data                          | `Demo Customer` и четыре Item созданы; авторы и профильные URL Unsplash проверены и заполнены                       |
-| Unmanaged package installation URL | Версия 1.2 относится к предыдущему snapshot; текущий deployment в неё не входит                                     |
+| Unmanaged package installation URL | Версия 1.3 загружена успешно; installation URL приведён ниже                                                        |
 | Unsplash Access Key                | Настроен в Dev Org; серверный callout к Unsplash успешно проверен                                                   |
 
 ## Unmanaged package
 
-Unmanaged package предыдущей server-side версии создан и загружен:
+Актуальный unmanaged package создан и загружен:
 
 - package: `Item Purchase Tool`;
-- package Id: `033dL000000fPdZ`;
-- version: `1.2`;
-- version Id: `04tdL000000kBtJQAU`;
-- upload request: `0HDdL0000000253WAA`;
+- package Id: `033dL000000fPdZQAU`;
+- version: `1.3`;
+- version Id: `04tdL000000kBuvQAE`;
+- upload request: `0HDdL000000026fWAA`;
 - status: `SUCCESS`.
 
-[Установить Item Purchase Tool 1.2 в другую Salesforce org](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kBtJQAU)
+[Установить Item Purchase Tool 1.3 в другую Salesforce org](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kBuvQAE)
 
-Версия 1.2 не содержит развёрнутые изменения Unsplash attribution/download tracking и исправленный FLS. Для распространения текущего snapshot через unmanaged package потребуется загрузить следующую версию.
+Перед загрузкой состав package был получен через Metadata API. Версия 1.3 включает текущие Apex-классы и тесты, LWC, Flows, объекты и поля, validation rules, layouts, permission sets, Named и External Credential, CSP Trusted Site, email template и Custom Notification Type.
 
 Access Key и записи Hierarchy Custom Setting не входят в package и настраиваются в каждой установленной org отдельно. Unmanaged package не поддерживает upgrades; повторное распространение выполняется новым package или source deployment.
 

@@ -404,10 +404,11 @@ Jest не запускает реальный Apex. Apex tests не запуск
 10. test-only deployments `0AfdL00000drdj7SAA` и `0AfdL00000drfGHSAY` добавили финальные acceptance tests;
 11. check-only manifest validation `0AfdL00000dr4WsSAI` завершён: 72/72 компонентов и 27/27 deployment tests, без ошибок;
 12. отдельный Apex run `707dL00001FIrxu` завершён: 32/32 tests passed, test-run coverage 92%, org-wide coverage 91%.
+13. состав package повторно получен через Metadata API, после чего загружена актуальная версия 1.3 `04tdL000000kBuvQAE`; upload request `0HDdL000000026fWAA` завершён со статусом `SUCCESS` без ошибок.
 
-Installation URL: [Item Purchase Tool 1.2](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kBtJQAU).
+Installation URL: [Item Purchase Tool 1.3](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kBuvQAE).
 
-Версия 1.2 предшествует текущему Unsplash attribution/download tracking и исправлениям доступа: текущий snapshot уже развёрнут и проверен, но ещё не включён в новую package version. Для четырёх demo Item выполнен backfill проверенных авторов и профильных URL, поэтому каталог показывает фотографии с видимой атрибуцией. Encrypted Unsplash Access Key настроен в Dev Org, а реальный серверный поиск фотографии и данных автора завершился успешно.
+Версия 1.3 содержит текущий Unsplash attribution/download tracking, исправления доступа и финальные acceptance tests. Для четырёх demo Item выполнен backfill проверенных авторов и профильных URL, поэтому каталог показывает фотографии с видимой атрибуцией. Encrypted Unsplash Access Key настроен в Dev Org, а реальный серверный поиск фотографии и данных автора завершился успешно. Значение ключа и записи Hierarchy Custom Setting в package не входят и настраиваются отдельно в каждой org.
 
 ## 12. Как самостоятельно проверить сценарий
 
