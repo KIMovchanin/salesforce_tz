@@ -366,7 +366,7 @@ Jest не запускает реальный Apex. Apex tests не запуск
 
 Installation URL: [Item Purchase Tool 1.0](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kB25QAE).
 
-Из org-specific настроек пока не добавлен только Unsplash Access Key. Поэтому существующие demo images работают, а создание нового Item через Unsplash начнёт работать после отдельной настройки encrypted credential. Исходники опубликованы в приватном репозитории `https://github.com/KIMovchanin/salesforce_tz`; перед отправкой URL по email проверяющему нужно выдать доступ к private repo.
+Из org-specific настроек пока не добавлен только Unsplash Access Key. Поэтому существующие demo images работают, а создание нового Item через Unsplash начнёт работать после отдельной настройки encrypted credential. Исходники опубликованы в приватном репозитории `https://github.com/KIMovchanin/salesforce_tz`, а URL отправлен на `dev@truesolv.com`. Для просмотра репозитория получателю всё равно нужно выдать GitHub-доступ.
 
 ## 12. Как самостоятельно проверить сценарий
 

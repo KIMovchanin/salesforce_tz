@@ -362,7 +362,7 @@ GitHub Actions запускает install, formatting check, ESLint и Jest пр
 | Результат                          | Текущий статус                                                        |
 | ---------------------------------- | --------------------------------------------------------------------- |
 | GitHub repository URL              | Приватный репозиторий: `https://github.com/KIMovchanin/salesforce_tz` |
-| Email с repository URL             | Pending: перед отправкой проверяющему нужен доступ к private repo     |
+| Email с repository URL             | Отправлен на `dev@truesolv.com`; для просмотра нужен GitHub-доступ    |
 | Dev Org deployment                 | Выполнен в `item-purchase-dev`, deployment Id `0AfdL00000dqf8gSAA`    |
 | Apex server tests                  | 28/28 passed, run `707dL00001FHl8Z`, org-wide coverage 92%            |
 | Admin `dev@truesolv.com`           | Создан и настроен                                                     |
