@@ -29,7 +29,6 @@
     </layoutSections>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>PurchaseLine__c.UnitCost__c</fields>
         <fields>PurchaseLine__c.LineTotal__c</fields>
         <relatedList>PurchaseLine__c.PurchaseId__c</relatedList>
     </relatedLists>

@@ -9,6 +9,5 @@
     <openType>newWindow</openType>
     <position>none</position>
     <protected>false</protected>
-    <requireRowSelection>false</requireRowSelection>
     <url>/lightning/n/Item_Purchase_Tool?c__accountId={!Account.Id}</url>
 </WebLink>

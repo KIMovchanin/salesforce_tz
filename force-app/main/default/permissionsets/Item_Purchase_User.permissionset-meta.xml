@@ -31,15 +31,6 @@
     >Purchase__c.TotalItems__c</field><readable
     >true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field
-    >PurchaseLine__c.Amount__c</field><readable
-    >true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field
-    >PurchaseLine__c.ItemId__c</field><readable
-    >true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field
-    >PurchaseLine__c.PurchaseId__c</field><readable
-    >true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field
     >PurchaseLine__c.LineTotal__c</field><readable
     >true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field
