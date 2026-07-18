@@ -56,7 +56,7 @@ public with sharing class InventoryNotificationEmailAction {
       message.setSaveAsActivity(false);
       message.setUseSignature(false);
       preparedEmail.message = message;
-    } catch (Exception exception) {
+    } catch (Exception caughtError) {
       preparedEmail.result.sent = false;
       preparedEmail.result.message = 'The inventory email could not be sent.';
     }
@@ -84,7 +84,7 @@ public with sharing class InventoryNotificationEmailAction {
           ? null
           : 'Salesforce rejected the inventory email.';
       }
-    } catch (Exception exception) {
+    } catch (Exception caughtError) {
       for (Integer resultIndex : messageResultIndexes) {
         results[resultIndex].sent = false;
         results[resultIndex].message = 'The inventory email could not be sent.';
@@ -112,7 +112,7 @@ public with sharing class InventoryNotificationEmailAction {
       return parsedId.getSObjectType() == User.SObjectType
         ? parsedId
         : UserInfo.getUserId();
-    } catch (Exception exception) {
+    } catch (Exception caughtError) {
       return UserInfo.getUserId();
     }
   }

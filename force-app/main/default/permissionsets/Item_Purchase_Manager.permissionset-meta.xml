@@ -8,18 +8,9 @@
     >Unsplash_API_Key-Unsplash_Principal</externalCredentialPrincipal>
     </externalCredentialPrincipalAccesses>
     <fieldPermissions><editable>true</editable><field
-    >Item__c.AvailableQuantity__c</field><readable
-    >true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field
     >Item__c.Description__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field
-    >Item__c.Family__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field
     >Item__c.Image__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field
-    >Item__c.Price__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field
-    >Item__c.Type__c</field><readable>true</readable></fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Item Purchase Manager</label>
     <objectPermissions>

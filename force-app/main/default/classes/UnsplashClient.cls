@@ -16,7 +16,7 @@ public with sharing class UnsplashClient {
     HttpResponse response;
     try {
       response = new Http().send(request);
-    } catch (CalloutException exception) {
+    } catch (CalloutException caughtError) {
       throw new PurchaseToolException(
         'Unsplash is currently unavailable. Try again later.'
       );
@@ -38,7 +38,7 @@ public with sharing class UnsplashClient {
       payload = (Map<String, Object>) JSON.deserializeUntyped(
         response.getBody()
       );
-    } catch (JSONException exception) {
+    } catch (JSONException caughtError) {
       throw new PurchaseToolException('Unsplash returned an invalid response.');
     }
 

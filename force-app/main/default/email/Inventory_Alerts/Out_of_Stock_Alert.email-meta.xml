@@ -3,7 +3,6 @@
     <available>true</available>
     <encodingKey>UTF-8</encodingKey>
     <name>Out of Stock Item Notification</name>
-    <relatedEntityType>Item__c</relatedEntityType>
     <style>none</style>
     <subject>Out of Stock Alert: {!Item__c.Name}</subject>
     <type>text</type>

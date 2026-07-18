@@ -27,8 +27,6 @@
     </layoutSections>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>PurchaseLine__c.PurchaseId__c</fields>
-        <fields>PurchaseLine__c.Amount__c</fields>
         <relatedList>PurchaseLine__c.ItemId__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>

@@ -218,10 +218,10 @@ private class PurchaseCheckoutServiceTest {
         new List<CartLineInput>{ PurchaseTestFactory.cartLine(item.Id, 1) }
       );
       System.Assert.fail('Expected an AuraHandledException.');
-    } catch (AuraHandledException exception) {
+    } catch (AuraHandledException caughtError) {
       System.Assert.areEqual(
         'Open the purchase tool from an Account record.',
-        exception.getMessage()
+        caughtError.getMessage()
       );
     }
     Test.stopTest();
@@ -327,8 +327,8 @@ private class PurchaseCheckoutServiceTest {
     try {
       PurchaseCheckoutService.checkout(accountId, cartLines);
       System.Assert.fail('Expected a PurchaseToolException.');
-    } catch (PurchaseToolException exception) {
-      System.Assert.areEqual(expectedMessage, exception.getMessage());
+    } catch (PurchaseToolException caughtError) {
+      System.Assert.areEqual(expectedMessage, caughtError.getMessage());
     }
   }
 }

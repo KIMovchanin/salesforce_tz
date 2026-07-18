@@ -136,10 +136,10 @@ private class ItemCreationServiceTest {
           1
         );
         System.Assert.fail('Expected an AuraHandledException.');
-      } catch (AuraHandledException exception) {
+      } catch (AuraHandledException caughtError) {
         System.Assert.areEqual(
           'Only inventory managers can create items.',
-          exception.getMessage()
+          caughtError.getMessage()
         );
       }
       Test.stopTest();
@@ -325,8 +325,8 @@ private class ItemCreationServiceTest {
         availableQuantity
       );
       System.Assert.fail('Expected a PurchaseToolException.');
-    } catch (PurchaseToolException exception) {
-      System.Assert.areEqual(expectedMessage, exception.getMessage());
+    } catch (PurchaseToolException caughtError) {
+      System.Assert.areEqual(expectedMessage, caughtError.getMessage());
     }
   }
 
@@ -337,8 +337,8 @@ private class ItemCreationServiceTest {
     try {
       UnsplashClient.findImageUrl(itemName);
       System.Assert.fail('Expected a PurchaseToolException.');
-    } catch (PurchaseToolException exception) {
-      System.Assert.areEqual(expectedMessage, exception.getMessage());
+    } catch (PurchaseToolException caughtError) {
+      System.Assert.areEqual(expectedMessage, caughtError.getMessage());
     }
   }
 }

@@ -12,6 +12,8 @@
             <layoutItems><behavior>Edit</behavior><field
         >AccountNumber</field></layoutItems>
             <layoutItems><behavior>Edit</behavior><field
+        >ParentId</field></layoutItems>
+            <layoutItems><behavior>Edit</behavior><field
         >Phone</field></layoutItems>
         </layoutColumns>
         <layoutColumns>

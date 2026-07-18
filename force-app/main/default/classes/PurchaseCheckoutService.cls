@@ -33,14 +33,14 @@ public with sharing class PurchaseCheckoutService {
       Database.insert(lines, AccessLevel.SYSTEM_MODE);
       Database.update(items, AccessLevel.SYSTEM_MODE);
       return purchase.Id;
-    } catch (PurchaseToolException exception) {
+    } catch (PurchaseToolException caughtError) {
       Database.rollback(savepoint);
-      throw exception;
-    } catch (Exception exception) {
+      throw caughtError;
+    } catch (Exception caughtError) {
       Database.rollback(savepoint);
       if (
-        exception.getMessage() != null &&
-        exception.getMessage().contains('UNABLE_TO_LOCK_ROW')
+        caughtError.getMessage() != null &&
+        caughtError.getMessage().contains('UNABLE_TO_LOCK_ROW')
       ) {
         throw new PurchaseToolException(
           'Inventory is being updated. Try checkout again.'

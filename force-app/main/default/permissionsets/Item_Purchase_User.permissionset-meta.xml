@@ -19,18 +19,9 @@
     <description
   >Access to browse items and create purchases from the Item Purchase Tool.</description>
     <fieldPermissions><editable>false</editable><field
-    >Item__c.AvailableQuantity__c</field><readable
-    >true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field
     >Item__c.Description__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field
-    >Item__c.Family__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field
     >Item__c.Image__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field
-    >Item__c.Price__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field
-    >Item__c.Type__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field
     >Purchase__c.ClientId__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field
@@ -50,9 +41,6 @@
     >true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field
     >PurchaseLine__c.LineTotal__c</field><readable
-    >true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field
-    >PurchaseLine__c.UnitCost__c</field><readable
     >true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field
     >User.IsManager__c</field><readable>true</readable></fieldPermissions>

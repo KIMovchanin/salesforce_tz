@@ -106,10 +106,10 @@ private class ItemCatalogServiceTest {
     try {
       PurchaseToolController.searchItems(null, null, searchText);
       System.Assert.fail('Expected an AuraHandledException.');
-    } catch (AuraHandledException exception) {
+    } catch (AuraHandledException caughtError) {
       System.Assert.areEqual(
         'Search text cannot exceed 100 characters.',
-        exception.getMessage()
+        caughtError.getMessage()
       );
     }
     Test.stopTest();

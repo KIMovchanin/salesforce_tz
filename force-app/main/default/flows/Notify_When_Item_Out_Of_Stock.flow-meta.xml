@@ -6,8 +6,8 @@
         <label>Send Bell Notification</label>
         <locationX>176</locationX>
         <locationY>780</locationY>
-        <actionName>sendCustomNotification</actionName>
-        <actionType>sendCustomNotification</actionType>
+        <actionName>customNotificationAction</actionName>
+        <actionType>customNotificationAction</actionType>
         <connector>
             <targetReference>Send_Email_Notification</targetReference>
         </connector>
@@ -45,6 +45,8 @@
                 <elementReference>$Record.Id</elementReference>
             </value>
         </inputParameters>
+        <nameSegment>customNotificationAction</nameSegment>
+        <versionSegment>1</versionSegment>
     </actionCalls>
     <actionCalls>
         <name>Send_Email_Notification</name>

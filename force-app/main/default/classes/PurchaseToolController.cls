@@ -7,9 +7,9 @@ public with sharing class PurchaseToolController {
   ) {
     try {
       return ItemCatalogService.search(family, type, searchTerm);
-    } catch (PurchaseToolException exception) {
-      throw handled(exception.getMessage());
-    } catch (Exception exception) {
+    } catch (PurchaseToolException caughtError) {
+      throw handled(caughtError.getMessage());
+    } catch (Exception caughtError) {
       throw handled(
         'Items could not be loaded. Check your permissions and try again.'
       );
@@ -20,9 +20,9 @@ public with sharing class PurchaseToolController {
   public static Map<String, List<String>> getFilterOptions() {
     try {
       return ItemCatalogService.getFilterOptions();
-    } catch (PurchaseToolException exception) {
-      throw handled(exception.getMessage());
-    } catch (Exception exception) {
+    } catch (PurchaseToolException caughtError) {
+      throw handled(caughtError.getMessage());
+    } catch (Exception caughtError) {
       throw handled('Item filters could not be loaded.');
     }
   }
@@ -31,7 +31,7 @@ public with sharing class PurchaseToolController {
   public static Boolean isCurrentUserManager() {
     try {
       return PurchaseToolAuthorization.isCurrentUserManager();
-    } catch (Exception exception) {
+    } catch (Exception caughtError) {
       return false;
     }
   }
@@ -54,9 +54,9 @@ public with sharing class PurchaseToolController {
         price,
         availableQuantity
       );
-    } catch (PurchaseToolException exception) {
-      throw handled(exception.getMessage());
-    } catch (Exception exception) {
+    } catch (PurchaseToolException caughtError) {
+      throw handled(caughtError.getMessage());
+    } catch (Exception caughtError) {
       throw handled('The item could not be created. No records were changed.');
     }
   }
@@ -65,14 +65,14 @@ public with sharing class PurchaseToolController {
   public static Id checkout(Id accountId, List<CartLineInput> cartLines) {
     try {
       return PurchaseCheckoutService.checkout(accountId, cartLines);
-    } catch (PurchaseToolException exception) {
-      throw handled(exception.getMessage());
+    } catch (PurchaseToolException caughtError) {
+      throw handled(caughtError.getMessage());
     }
   }
 
   private static AuraHandledException handled(String message) {
-    AuraHandledException exception = new AuraHandledException(message);
-    exception.setMessage(message);
-    return exception;
+    AuraHandledException handledError = new AuraHandledException(message);
+    handledError.setMessage(message);
+    return handledError;
   }
 }
