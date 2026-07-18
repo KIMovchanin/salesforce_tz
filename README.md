@@ -359,16 +359,16 @@ GitHub Actions запускает install, formatting check, ESLint и Jest пр
 
 ## Delivery
 
-| Результат                          | Текущий статус                                                     |
-| ---------------------------------- | ------------------------------------------------------------------ |
-| GitHub repository URL              | Pending: репозиторий пока не опубликован                           |
-| Email с repository URL             | Pending: будет отправлен после появления фактического GitHub URL   |
-| Dev Org deployment                 | Выполнен в `item-purchase-dev`, deployment Id `0AfdL00000dqf8gSAA` |
-| Apex server tests                  | 28/28 passed, run `707dL00001FHl8Z`, org-wide coverage 92%         |
-| Admin `dev@truesolv.com`           | Создан и настроен                                                  |
-| Demo data                          | `Demo Customer` и четыре Item созданы                              |
-| Unmanaged package installation URL | Готова версия 1.0 из 74 компонентов                                |
-| Unsplash Access Key                | Pending; нужен только для создания новых Item                      |
+| Результат                          | Текущий статус                                                        |
+| ---------------------------------- | --------------------------------------------------------------------- |
+| GitHub repository URL              | Приватный репозиторий: `https://github.com/KIMovchanin/salesforce_tz` |
+| Email с repository URL             | Pending: перед отправкой проверяющему нужен доступ к private repo     |
+| Dev Org deployment                 | Выполнен в `item-purchase-dev`, deployment Id `0AfdL00000dqf8gSAA`    |
+| Apex server tests                  | 28/28 passed, run `707dL00001FHl8Z`, org-wide coverage 92%            |
+| Admin `dev@truesolv.com`           | Создан и настроен                                                     |
+| Demo data                          | `Demo Customer` и четыре Item созданы                                 |
+| Unmanaged package installation URL | Готова версия 1.0 из 74 компонентов                                   |
+| Unsplash Access Key                | Pending; нужен только для создания новых Item                         |
 
 ## Unmanaged package
 
