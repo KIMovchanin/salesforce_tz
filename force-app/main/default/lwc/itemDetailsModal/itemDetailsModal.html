@@ -5,6 +5,8 @@
         <c-item-image
           image-url={item.Image__c}
           alternative-text={heading}
+          photographer-name={item.Unsplash_Photographer__c}
+          photographer-url={item.Unsplash_Profile_URL__c}
         ></c-item-image>
       </div>
       <div class="information">
@@ -33,18 +35,18 @@
         <p class="description">{description}</p>
       </div>
     </div>
-    <div slot="footer" class="footer-actions">
-      <lightning-button
-        label="Close"
-        variant="neutral"
-        onclick={handleClose}
-      ></lightning-button>
-      <lightning-button
-        label="Add to cart"
-        variant="brand"
-        disabled={isOutOfStock}
-        onclick={handleAdd}
-      ></lightning-button>
-    </div>
+    <lightning-button
+      slot="footer"
+      label="Close"
+      variant="neutral"
+      onclick={handleClose}
+    ></lightning-button>
+    <lightning-button
+      slot="footer"
+      label="Add to cart"
+      variant="brand"
+      disabled={isOutOfStock}
+      onclick={handleAdd}
+    ></lightning-button>
   </c-modal-shell>
 </template>

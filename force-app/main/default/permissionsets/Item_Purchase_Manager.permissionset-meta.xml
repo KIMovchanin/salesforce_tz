@@ -11,6 +11,12 @@
     >Item__c.Description__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field
     >Item__c.Image__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>true</editable><field
+    >Item__c.Unsplash_Photographer__c</field><readable
+    >true</readable></fieldPermissions>
+    <fieldPermissions><editable>true</editable><field
+    >Item__c.Unsplash_Profile_URL__c</field><readable
+    >true</readable></fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Item Purchase Manager</label>
     <objectPermissions>

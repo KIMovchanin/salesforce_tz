@@ -18,12 +18,6 @@
   font-size: 0.75rem;
 }
 
-.footer-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-}
-
 @media (max-width: 35rem) {
   .form-grid {
     grid-template-columns: 1fr;

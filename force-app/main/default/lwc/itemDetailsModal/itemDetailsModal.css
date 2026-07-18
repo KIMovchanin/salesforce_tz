@@ -47,12 +47,6 @@
   white-space: pre-wrap;
 }
 
-.footer-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-}
-
 @media (max-width: 48rem) {
   .details {
     grid-template-columns: 1fr;

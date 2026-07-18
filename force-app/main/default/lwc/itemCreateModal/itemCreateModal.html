@@ -75,19 +75,19 @@
       The product image is selected automatically from Unsplash using the item
       name.
     </p>
-    <div slot="footer" class="footer-actions">
-      <lightning-button
-        label="Cancel"
-        variant="neutral"
-        disabled={saving}
-        onclick={handleClose}
-      ></lightning-button>
-      <lightning-button
-        label="Create item"
-        variant="brand"
-        disabled={saveDisabled}
-        onclick={handleSave}
-      ></lightning-button>
-    </div>
+    <lightning-button
+      slot="footer"
+      label="Cancel"
+      variant="neutral"
+      disabled={saving}
+      onclick={handleClose}
+    ></lightning-button>
+    <lightning-button
+      slot="footer"
+      label="Create item"
+      variant="brand"
+      disabled={saveDisabled}
+      onclick={handleSave}
+    ></lightning-button>
   </c-modal-shell>
 </template>

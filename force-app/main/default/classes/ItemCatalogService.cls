@@ -39,7 +39,8 @@ public with sharing class ItemCatalogService {
     }
 
     String query =
-      'SELECT Id, Name, Description__c, Type__c, Family__c, Image__c, Price__c, AvailableQuantity__c ' +
+      'SELECT Id, Name, Description__c, Type__c, Family__c, Image__c, ' +
+      'Unsplash_Photographer__c, Unsplash_Profile_URL__c, Price__c, AvailableQuantity__c ' +
       'FROM Item__c';
     if (!conditions.isEmpty()) {
       query += ' WHERE ' + String.join(conditions, ' AND ');

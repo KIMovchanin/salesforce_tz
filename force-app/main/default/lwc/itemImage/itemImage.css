@@ -1,13 +1,34 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
+}
+
+.image-frame {
+  min-height: 0;
+  flex: 1;
 }
 
 img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.attribution {
+  flex: none;
+  padding: 0.2rem 0.35rem;
+  background: #fff;
+  color: #444;
+  font-size: 0.625rem;
+  line-height: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.attribution a {
+  color: inherit;
+  text-decoration: underline;
 }
 
 .placeholder {

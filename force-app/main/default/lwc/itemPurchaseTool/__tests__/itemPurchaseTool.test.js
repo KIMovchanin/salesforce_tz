@@ -62,6 +62,9 @@ const CATALOG = [
     Type__c: "Product",
     Family__c: "Electronics",
     Image__c: "https://images.unsplash.com/lamp",
+    Unsplash_Photographer__c: "Jane Photographer",
+    Unsplash_Profile_URL__c:
+      "https://unsplash.com/@jane?utm_source=item_purchase_tool&utm_medium=referral",
     Price__c: 25,
     AvailableQuantity__c: 3
   },
@@ -175,6 +178,12 @@ describe("c-item-purchase-tool", () => {
     const cartModal = element.shadowRoot.querySelector("c-item-cart-modal");
     expect(cartModal.items).toHaveLength(1);
     expect(cartModal.items[0].itemId).toBe(CATALOG[0].Id);
+    expect(cartModal.items[0].photographerName).toBe(
+      CATALOG[0].Unsplash_Photographer__c
+    );
+    expect(cartModal.items[0].photographerUrl).toBe(
+      CATALOG[0].Unsplash_Profile_URL__c
+    );
   });
 
   it("searches text and combines it with family filters", async () => {

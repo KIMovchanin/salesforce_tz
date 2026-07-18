@@ -7,6 +7,10 @@ const ITEM = {
   Description__c: "Adjustable LED lamp",
   Type__c: "Product",
   Family__c: "Electronics",
+  Image__c: "https://images.unsplash.com/lamp",
+  Unsplash_Photographer__c: "Jane Photographer",
+  Unsplash_Profile_URL__c:
+    "https://unsplash.com/@jane?utm_source=item_purchase_tool&utm_medium=referral",
   Price__c: 25,
   AvailableQuantity__c: 3
 };
@@ -33,6 +37,9 @@ describe("c-item-details-modal", () => {
     expect(element.shadowRoot.querySelector(".description").textContent).toBe(
       ITEM.Description__c
     );
+    const image = element.shadowRoot.querySelector("c-item-image");
+    expect(image.photographerName).toBe(ITEM.Unsplash_Photographer__c);
+    expect(image.photographerUrl).toBe(ITEM.Unsplash_Profile_URL__c);
     expect(addHandler.mock.calls[0][0].detail.item).toEqual(ITEM);
   });
 

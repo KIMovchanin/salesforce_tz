@@ -35,11 +35,7 @@ export default class ItemTile extends LightningElement {
   }
 
   handleDetails() {
-    this.dispatchEvent(
-      new CustomEvent("showdetails", {
-        detail: { item: this.item }
-      })
-    );
+    dispatchItemEvent(this, "showdetails", this.item);
   }
 
   handleAdd() {

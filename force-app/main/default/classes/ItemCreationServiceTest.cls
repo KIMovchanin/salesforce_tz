@@ -1,11 +1,17 @@
 @IsTest
 private class ItemCreationServiceTest {
   private class SequenceMock implements HttpCalloutMock {
+    private List<String> endpoints;
     private List<Integer> statusCodes;
     private List<String> bodies;
     private Integer index = 0;
 
-    SequenceMock(List<Integer> statusCodes, List<String> bodies) {
+    SequenceMock(
+      List<String> endpoints,
+      List<Integer> statusCodes,
+      List<String> bodies
+    ) {
+      this.endpoints = endpoints;
       this.statusCodes = statusCodes;
       this.bodies = bodies;
     }
@@ -13,16 +19,17 @@ private class ItemCreationServiceTest {
     public HttpResponse respond(HttpRequest request) {
       System.Assert.isTrue(index < statusCodes.size());
       System.Assert.areEqual('GET', request.getMethod());
-      System.Assert.isTrue(
-        request.getEndpoint()
-          .startsWith('callout:Unsplash_API/search/photos?query=')
-      );
-      System.Assert.isTrue(request.getEndpoint().endsWith('&per_page=1'));
+      System.Assert.areEqual('v1', request.getHeader('Accept-Version'));
+      System.Assert.areEqual(endpoints[index], request.getEndpoint());
       HttpResponse response = new HttpResponse();
       response.setStatusCode(statusCodes[index]);
       response.setBody(bodies[index]);
       index++;
       return response;
+    }
+
+    void assertComplete() {
+      System.Assert.areEqual(statusCodes.size(), index);
     }
   }
 
@@ -48,17 +55,20 @@ private class ItemCreationServiceTest {
   }
 
   @IsTest
-  static void managerCreatesTrimmedItemWithUnsplashImage() {
+  static void managerCreatesAttributedItemAndTracksSelection() {
     User manager = userByLastName('Purchase Tool Manager');
-    Test.setMock(
-      HttpCalloutMock.class,
-      new SequenceMock(
-        new List<Integer>{ 200 },
-        new List<String>{
-          '{"results":[{"urls":{"small":"https://images.unsplash.com/photo-test"}}]}'
-        }
-      )
+    SequenceMock callouts = new SequenceMock(
+      new List<String>{
+        searchEndpoint('Desk Lamp'),
+        'callout:Unsplash_API/photos/photo-test/download?ixid=download-context&context=search%20result'
+      },
+      new List<Integer>{ 200, 200 },
+      new List<String>{
+        validPhotoBody(),
+        '{"url":"https://images.unsplash.com/photo-test"}'
+      }
     );
+    Test.setMock(HttpCalloutMock.class, callouts);
     Item__c createdItem;
 
     System.runAs(manager) {
@@ -76,6 +86,7 @@ private class ItemCreationServiceTest {
       Test.stopTest();
     }
 
+    callouts.assertComplete();
     createdItem = [
       SELECT
         Name,
@@ -83,6 +94,8 @@ private class ItemCreationServiceTest {
         Type__c,
         Family__c,
         Image__c,
+        Unsplash_Photographer__c,
+        Unsplash_Profile_URL__c,
         Price__c,
         AvailableQuantity__c
       FROM Item__c
@@ -94,8 +107,16 @@ private class ItemCreationServiceTest {
     System.Assert.areEqual('Product', createdItem.Type__c);
     System.Assert.areEqual('Electronics', createdItem.Family__c);
     System.Assert.areEqual(
-      'https://images.unsplash.com/photo-test',
+      'https://images.unsplash.com/photo-test?ixid=application',
       createdItem.Image__c
+    );
+    System.Assert.areEqual(
+      'Jane Photographer',
+      createdItem.Unsplash_Photographer__c
+    );
+    System.Assert.areEqual(
+      'https://unsplash.com/@jane-photographer?utm_source=item_purchase_tool&utm_medium=referral',
+      createdItem.Unsplash_Profile_URL__c
     );
     System.Assert.areEqual(Decimal.valueOf('89.99'), createdItem.Price__c);
     System.Assert.areEqual(
@@ -235,53 +256,133 @@ private class ItemCreationServiceTest {
   }
 
   @IsTest
-  static void mapsUnsplashErrorResponsesToStableMessages() {
-    Test.setMock(
-      HttpCalloutMock.class,
-      new SequenceMock(
-        new List<Integer>{ 429, 503, 200, 200, 200, 200, 200 },
-        new List<String>{
-          '{}',
-          '{}',
-          'not-json',
-          '{}',
-          '{"results":[]}',
-          '{"results":[{}]}',
-          '{"results":[{"urls":{"small":"https://example.com/image.jpg"}}]}'
-        }
-      )
+  static void mapsSearchErrorsToStableMessages() {
+    List<String> itemNames = new List<String>{
+      'Rate Limited',
+      'Server Error',
+      'Invalid JSON',
+      'Invalid Shape',
+      'Missing Results',
+      'Empty Results',
+      'Missing URL',
+      'Unsupported Host',
+      'Missing Photographer',
+      'Unsupported Profile',
+      'Unsupported Download'
+    };
+    List<String> endpoints = new List<String>();
+    for (String itemName : itemNames) {
+      endpoints.add(searchEndpoint(itemName));
+    }
+    SequenceMock callouts = new SequenceMock(
+      endpoints,
+      new List<Integer>{
+        429,
+        503,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      },
+      new List<String>{
+        '{}',
+        '{}',
+        'not-json',
+        '[]',
+        '{}',
+        '{"results":[]}',
+        '{"results":[{}]}',
+        '{"results":[{"urls":{"small":"https://example.com/image.jpg"}}]}',
+        '{"results":[{"urls":{"small":"https://images.unsplash.com/photo"}}]}',
+        '{"results":[{"urls":{"small":"https://images.unsplash.com/photo"},"user":{"name":"Jane","links":{"html":"https://example.com/jane"}}}]}',
+        '{"results":[{"urls":{"small":"https://images.unsplash.com/photo"},"links":{"download_location":"https://api.unsplash.com/photos/photo/download?ixid=safe#fragment"},"user":{"name":"Jane","links":{"html":"https://unsplash.com/@jane"}}}]}'
+      }
     );
+    Test.setMock(HttpCalloutMock.class, callouts);
 
     Test.startTest();
     assertUnsplashFailure(
-      'Rate Limited',
+      itemNames[0],
       'Unsplash request limit has been reached. Try again later.'
     );
     assertUnsplashFailure(
-      'Server Error',
+      itemNames[1],
       'Unsplash could not provide an image for this item.'
     );
     assertUnsplashFailure(
-      'Invalid JSON',
+      itemNames[2],
       'Unsplash returned an invalid response.'
     );
     assertUnsplashFailure(
-      'Missing Results',
+      itemNames[3],
+      'Unsplash returned an invalid response.'
+    );
+    assertUnsplashFailure(
+      itemNames[4],
       'Unsplash did not find an image for this item.'
     );
     assertUnsplashFailure(
-      'Empty Results',
+      itemNames[5],
       'Unsplash did not find an image for this item.'
     );
     assertUnsplashFailure(
-      'Missing URL',
+      itemNames[6],
       'Unsplash returned an unsupported image URL.'
     );
     assertUnsplashFailure(
-      'Unsupported Host',
+      itemNames[7],
       'Unsplash returned an unsupported image URL.'
+    );
+    assertUnsplashFailure(
+      itemNames[8],
+      'Unsplash returned incomplete photographer attribution.'
+    );
+    assertUnsplashFailure(
+      itemNames[9],
+      'Unsplash returned an unsupported photographer URL.'
+    );
+    assertUnsplashFailure(
+      itemNames[10],
+      'Unsplash returned an unsupported download endpoint.'
     );
     Test.stopTest();
+    callouts.assertComplete();
+  }
+
+  @IsTest
+  static void downloadTrackingFailurePreventsItemCreation() {
+    User manager = userByLastName('Purchase Tool Manager');
+    SequenceMock callouts = new SequenceMock(
+      new List<String>{
+        searchEndpoint('Track Failure'),
+        'callout:Unsplash_API/photos/photo-test/download?ixid=download-context&context=search%20result'
+      },
+      new List<Integer>{ 200, 503 },
+      new List<String>{ validPhotoBody(), '{}' }
+    );
+    Test.setMock(HttpCalloutMock.class, callouts);
+
+    System.runAs(manager) {
+      Test.startTest();
+      assertCreateFailure(
+        'Track Failure',
+        null,
+        'Product',
+        'Electronics',
+        10,
+        1,
+        'Unsplash could not register the selected image.'
+      );
+      Test.stopTest();
+    }
+
+    callouts.assertComplete();
+    System.Assert.areEqual(0, [SELECT COUNT() FROM Item__c WITH SYSTEM_MODE]);
   }
 
   private static User userByLastName(String lastName) {
@@ -323,10 +424,20 @@ private class ItemCreationServiceTest {
     String expectedMessage
   ) {
     try {
-      UnsplashClient.findImageUrl(itemName);
+      UnsplashClient.findPhoto(itemName);
       System.Assert.fail('Expected a PurchaseToolException.');
     } catch (PurchaseToolException caughtError) {
       System.Assert.areEqual(expectedMessage, caughtError.getMessage());
     }
+  }
+
+  private static String searchEndpoint(String itemName) {
+    return 'callout:Unsplash_API/search/photos?query=' +
+      EncodingUtil.urlEncode(itemName, 'UTF-8') +
+      '&per_page=1';
+  }
+
+  private static String validPhotoBody() {
+    return '{"results":[{"urls":{"small":"https://images.unsplash.com/photo-test?ixid=application"},"links":{"download_location":"https://api.unsplash.com/photos/photo-test/download?ixid=download-context&context=search%20result"},"user":{"name":"Jane Photographer","links":{"html":"https://unsplash.com/@jane-photographer"}}}]}';
   }
 }

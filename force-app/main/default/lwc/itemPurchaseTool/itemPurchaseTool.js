@@ -218,6 +218,8 @@ export default class ItemPurchaseTool extends NavigationMixin(
         itemId: line.item.Id,
         name: line.item.Name,
         imageUrl: line.item.Image__c,
+        photographerName: line.item.Unsplash_Photographer__c,
+        photographerUrl: line.item.Unsplash_Profile_URL__c,
         price,
         quantity: line.quantity,
         availableQuantity: Number(line.item.AvailableQuantity__c || 0),

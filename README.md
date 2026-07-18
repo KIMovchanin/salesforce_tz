@@ -14,7 +14,7 @@
 - атомарный checkout с серверной ценой, блокировкой Item и откатом всей транзакции при ошибке;
 - создание Purchase и PurchaseLine, уменьшение Available Quantity и переход на стандартную страницу Purchase;
 - создание Item только для пользователя с `User.IsManager__c = true` и manager permission set;
-- получение изображения через Unsplash API с защищённым Access Key;
+- получение изображения через Unsplash API с защищённым Access Key, обязательной регистрацией выбора и атрибуцией фотографа;
 - автоматический расчёт `TotalItems__c` и `GrandTotal__c` Record-Triggered Flow;
 - Bell и email-уведомления при переходе остатка товара в ноль;
 - permission sets для обычного пользователя и менеджера;
@@ -30,7 +30,9 @@ flowchart LR
     Controller --> Catalog["ItemCatalogService"]
     Controller --> Creation["ItemCreationService"]
     Creation --> Auth["Manager authorization"]
-    Creation --> Unsplash["UnsplashClient + Named Credential"]
+    Creation --> Unsplash["Unsplash search + Named Credential"]
+    Unsplash --> Tracking["download_location tracking"]
+    Unsplash --> Attribution["Hotlinked image + photographer attribution"]
     Controller --> Checkout["PurchaseCheckoutService"]
     Checkout --> Lock["Item rows: FOR UPDATE"]
     Lock --> Purchase["Purchase + Purchase Lines"]
@@ -45,12 +47,12 @@ flowchart LR
 
 | Слой            | Компоненты                                                             | Ответственность                                                      |
 | --------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| UI              | `itemPurchaseTool`, `itemTile`, `itemImage`, модальные LWC             | Состояние каталога и корзины, события, валидация ввода, навигация    |
+| UI              | `itemPurchaseTool`, `itemTile`, `itemImage`, модальные LWC             | Каталог, корзина, события, навигация и единая атрибуция изображений  |
 | UI utilities    | `itemPresentation`, `componentEvents`, `modalShell`                    | Общие presentation rules, события и SLDS modal shell без копирования |
 | Application API | `PurchaseToolController`                                               | Узкий `@AuraEnabled`-контракт и стабильные сообщения об ошибках      |
 | Domain services | `ItemCatalogService`, `ItemCreationService`, `PurchaseCheckoutService` | Поиск, создание товара, checkout и правила склада                    |
 | Security        | `PurchaseToolAuthorization`, permission sets                           | Manager gate, CRUD/FLS, sharing и доступ к External Credential       |
-| Integration     | `UnsplashClient`, Named/External Credential                            | Вызов Unsplash без секрета в Apex или Git                            |
+| Integration     | `UnsplashClient`, Named/External Credential                            | Search, проверка URL, download tracking и защита Access Key          |
 | Automation      | 3 Record-Triggered Flows, 2 invocable Apex actions                     | Итоги Purchase, Bell и email-уведомления                             |
 | Metadata        | Objects, fields, layouts, app, tab, button, template, settings         | Декларативная модель и пользовательский доступ                       |
 | Tests           | 6 Apex test classes, 8 Jest suites                                     | Позитивные, негативные, rollback, Flow и UI-сценарии                 |
@@ -68,27 +70,29 @@ flowchart LR
 
 ## Модель данных
 
-| Object                               | Field                  | Type                | Назначение                                     |
-| ------------------------------------ | ---------------------- | ------------------- | ---------------------------------------------- |
-| `Purchase__c`                        | `Name`                 | Text                | Человекочитаемое имя покупки                   |
-| `Purchase__c`                        | `ClientId__c`          | Lookup(Account)     | Account, для которого создана покупка          |
-| `Purchase__c`                        | `TotalItems__c`        | Number(18,0)        | Сумма количеств строк, обновляется Flow        |
-| `Purchase__c`                        | `GrandTotal__c`        | Number(18,2)        | Сумма `Amount × UnitCost`, обновляется Flow    |
-| `PurchaseLine__c`                    | `PurchaseId__c`        | Master-Detail       | Родительская покупка                           |
-| `PurchaseLine__c`                    | `ItemId__c`            | Master-Detail       | Купленный товар                                |
-| `PurchaseLine__c`                    | `Amount__c`            | Number(18,0)        | Количество                                     |
-| `PurchaseLine__c`                    | `UnitCost__c`          | Number(18,2)        | Цена на момент checkout                        |
-| `PurchaseLine__c`                    | `LineTotal__c`         | Formula Number      | `Amount × UnitCost`, используется bulk totals  |
-| `Item__c`                            | `Name`                 | Text                | Название товара и запрос к Unsplash            |
-| `Item__c`                            | `Description__c`       | Text(255)           | Описание, доступное для SOQL `LIKE`-поиска     |
-| `Item__c`                            | `Type__c`              | Restricted Picklist | Product, Accessory, Supply, Equipment          |
-| `Item__c`                            | `Family__c`            | Restricted Picklist | Electronics, Furniture, Office Supplies, Other |
-| `Item__c`                            | `Image__c`             | URL                 | Изображение с `images.unsplash.com`            |
-| `Item__c`                            | `Price__c`             | Number(18,2)        | Серверная цена                                 |
-| `Item__c`                            | `AvailableQuantity__c` | Number(18,0)        | Текущий остаток                                |
-| `User`                               | `IsManager__c`         | Checkbox            | Разрешение бизнес-уровня на создание Item      |
-| `Inventory_Notification_Settings__c` | `Recipient_User__c`    | Text(18)            | Salesforce User Id для Bell                    |
-| `Inventory_Notification_Settings__c` | `Recipient_Email__c`   | Email               | Адрес для email-уведомлений                    |
+| Object                               | Field                      | Type                | Назначение                                     |
+| ------------------------------------ | -------------------------- | ------------------- | ---------------------------------------------- |
+| `Purchase__c`                        | `Name`                     | Text                | Человекочитаемое имя покупки                   |
+| `Purchase__c`                        | `ClientId__c`              | Lookup(Account)     | Account, для которого создана покупка          |
+| `Purchase__c`                        | `TotalItems__c`            | Number(18,0)        | Сумма количеств строк, обновляется Flow        |
+| `Purchase__c`                        | `GrandTotal__c`            | Number(18,2)        | Сумма `Amount × UnitCost`, обновляется Flow    |
+| `PurchaseLine__c`                    | `PurchaseId__c`            | Master-Detail       | Родительская покупка                           |
+| `PurchaseLine__c`                    | `ItemId__c`                | Master-Detail       | Купленный товар                                |
+| `PurchaseLine__c`                    | `Amount__c`                | Number(18,0)        | Количество                                     |
+| `PurchaseLine__c`                    | `UnitCost__c`              | Number(18,2)        | Цена на момент checkout                        |
+| `PurchaseLine__c`                    | `LineTotal__c`             | Formula Number      | `Amount × UnitCost`, используется bulk totals  |
+| `Item__c`                            | `Name`                     | Text                | Название товара и запрос к Unsplash            |
+| `Item__c`                            | `Description__c`           | Text(255)           | Описание, доступное для SOQL `LIKE`-поиска     |
+| `Item__c`                            | `Type__c`                  | Restricted Picklist | Product, Accessory, Supply, Equipment          |
+| `Item__c`                            | `Family__c`                | Restricted Picklist | Electronics, Furniture, Office Supplies, Other |
+| `Item__c`                            | `Image__c`                 | URL                 | Изображение с `images.unsplash.com`            |
+| `Item__c`                            | `Unsplash_Photographer__c` | Text(255)           | Имя автора для обязательной атрибуции          |
+| `Item__c`                            | `Unsplash_Profile_URL__c`  | URL                 | Профиль автора с referral UTM-параметрами      |
+| `Item__c`                            | `Price__c`                 | Number(18,2)        | Серверная цена                                 |
+| `Item__c`                            | `AvailableQuantity__c`     | Number(18,0)        | Текущий остаток                                |
+| `User`                               | `IsManager__c`             | Checkbox            | Разрешение бизнес-уровня на создание Item      |
+| `Inventory_Notification_Settings__c` | `Recipient_User__c`        | Text(18)            | Salesforce User Id для Bell                    |
+| `Inventory_Notification_Settings__c` | `Recipient_Email__c`       | Email               | Адрес для email-уведомлений                    |
 
 `Recipient_User__c` хранится как Text(18), поскольку Salesforce не поддерживает relationship fields в Hierarchy Custom Settings. API name сохранён по техническому заданию, а Flow дополнительно проверяет, что User существует и активен.
 
@@ -172,11 +176,11 @@ Dev Org уже настроена и развёрнута под alias `item-pur
 В Dev Org уже подготовлены:
 
 - Account `Demo Customer`, Id `001dL00002MFkXwQAL`;
-- четыре демонстрационных Item с работающими изображениями;
+- четыре демонстрационных Item; старые Unsplash URL без достоверной атрибуции намеренно отображаются как placeholder до заполнения данных авторов;
 - оба permission set и `User.IsManager__c = true` у текущего пользователя;
 - активный System Administrator с email `dev@truesolv.com`.
 
-Unsplash Access Key пока не настроен. Это влияет только на создание новых Item через кнопку `Create item`; готовые демонстрационные товары и их изображения работают без дополнительной настройки.
+Unsplash Access Key пока не настроен. Это блокирует создание новых Item через кнопку `Create item`. Каталог, поиск, фильтры, корзина и checkout доступны; у четырёх старых demo Item вместо Unsplash-фото показывается placeholder, пока не будут заполнены реальные автор и профиль.
 
 ## Предварительные требования
 
@@ -329,9 +333,14 @@ Email использует template `Out of Stock Item Notification`. Apex actio
 - `FOR UPDATE` предотвращает overselling при параллельном checkout;
 - savepoint обеспечивает атомарный rollback;
 - динамический SOQL использует bind variables;
+- базовый permission set явно открывает FLS для permissionable optional fields: Account Number, Industry, Item Description/Image/attribution, Line Total и manager flag;
+- required и Master-Detail fields не допускают отдельных `fieldPermissions` в API 67.0 и доступны по платформенной семантике вместе с object access;
+- manager permission set добавляет Create/Edit Item и edit FLS для optional полей; доступ к обязательным Item fields следует из object permission;
 - Access Key хранится в зашифрованном User External Credential;
 - permission set менеджера предоставляет только минимальный `Read + View All` к `UserExternalCredential`;
 - CSP разрешает изображения только с `https://images.unsplash.com`;
+- `UnsplashClient` принимает только hotlinked `photo.urls.small`, профиль на `unsplash.com` и `download_location` на `api.unsplash.com`; безопасные query-параметры сохраняются без изменения, fragment и неподдерживаемые символы отклоняются;
+- `itemImage` показывает «Photo by … on Unsplash» во всех местах отображения API-фотографии, не приписывает Unsplash внешним URL и скрывает Unsplash-фото без проверенных данных автора;
 - delete для Item пользователям не выдаётся, поскольку dual Master-Detail может каскадно удалить исторические Purchase Lines.
 
 ## Проверки качества
@@ -343,38 +352,36 @@ pnpm test:unit
 pnpm test:unit:coverage
 ```
 
-Текущий проверенный результат:
+Текущий подтверждённый результат:
 
-- 8 Jest suites, 23 tests — passed;
+- 8 Jest suites, 25 tests — passed;
 - ESLint — passed;
 - Prettier — passed;
-- source-based и manifest-based Salesforce conversion — passed, включая email folder/template;
-- full deployment в Dev Org — success, deployment Id `0AfdL00000dqf8gSAA`;
-- LWC deduplication deployments — success, latest Id `0AfdL00000dqsUzSAI`;
-- Apex test run `707dL00001FICH9`: 28 из 28 tests — passed;
-- org-wide Apex coverage — 92%;
+- XML metadata parse и проверка отсутствия комментариев в коде — passed;
+- source-to-Metadata API conversion: 89 файлов, без предупреждений;
+- Dev Org deployment `0AfdL00000dr5G3SAI`: 70/70 компонентов, без ошибок;
+- отдельный Apex run `707dL00001FITxy`: 29/29 tests passed, test-run coverage 92%, org-wide coverage 91%;
 - Apex tests не используют `SeeAllData=true`.
 
-Локальный parser и source conversion не заменяют server-side compile. Окончательная проверка уже выполнена в `item-purchase-dev`; команду `sf apex run test` используют при последующих изменениях.
+Текущий Unsplash/FLS hardening развёрнут в Dev Org и прошёл полный отдельный `RunLocalTests`. Unmanaged package 1.2 был загружен раньше и эту версию ещё не содержит.
 
 GitHub Actions запускает install, formatting check, ESLint и Jest при push в `main` и для pull request.
 
 ## Delivery
 
-| Результат                          | Текущий статус                                                           |
-| ---------------------------------- | ------------------------------------------------------------------------ |
-| GitHub repository URL              | Приватный репозиторий: `https://github.com/KIMovchanin/salesforce_tz`    |
-| Email с repository URL             | Отправлен на `dev@truesolv.com`; для просмотра нужен GitHub-доступ       |
-| Dev Org deployment                 | Full deploy `0AfdL00000dqf8gSAA`, latest LWC update `0AfdL00000dqsUzSAI` |
-| Apex server tests                  | 28/28 passed, run `707dL00001FICH9`, org-wide coverage 92%               |
-| Admin `dev@truesolv.com`           | Создан и настроен                                                        |
-| Demo data                          | `Demo Customer` и четыре Item созданы                                    |
-| Unmanaged package installation URL | Готова актуальная версия 1.2                                             |
-| Unsplash Access Key                | Pending; нужен только для создания новых Item                            |
+| Результат                          | Текущий статус                                                                                                      |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| GitHub repository URL              | Приватный репозиторий: `https://github.com/KIMovchanin/salesforce_tz`; `main` содержит текущий проверенный snapshot |
+| Dev Org deployment                 | Успешно: `0AfdL00000dr5G3SAI`, 70/70 компонентов                                                                    |
+| Apex server tests                  | 29/29 passed, run `707dL00001FITxy`, test-run coverage 92%, org-wide coverage 91%                                   |
+| Admin `dev@truesolv.com`           | Создан и настроен                                                                                                   |
+| Demo data                          | `Demo Customer` и четыре Item созданы; старые фото ожидают attribution backfill                                     |
+| Unmanaged package installation URL | Версия 1.2 относится к предыдущему snapshot; текущий deployment в неё не входит                                     |
+| Unsplash Access Key                | Pending; нужен только для создания новых Item                                                                       |
 
 ## Unmanaged package
 
-Unmanaged package уже создан и загружен:
+Unmanaged package предыдущей server-side версии создан и загружен:
 
 - package: `Item Purchase Tool`;
 - package Id: `033dL000000fPdZ`;
@@ -384,6 +391,8 @@ Unmanaged package уже создан и загружен:
 - status: `SUCCESS`.
 
 [Установить Item Purchase Tool 1.2 в другую Salesforce org](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tdL000000kBtJQAU)
+
+Версия 1.2 не содержит развёрнутые изменения Unsplash attribution/download tracking и исправленный FLS. Для распространения текущего snapshot через unmanaged package потребуется загрузить следующую версию.
 
 Access Key и записи Hierarchy Custom Setting не входят в package и настраиваются в каждой установленной org отдельно. Unmanaged package не поддерживает upgrades; повторное распространение выполняется новым package или source deployment.
 
@@ -420,6 +429,8 @@ Access Key и записи Hierarchy Custom Setting не входят в package
 - [Apex Security and User Mode](https://developer.salesforce.com/docs/platform/lwc/guide/apex-security)
 - [Named Credentials](https://developer.salesforce.com/docs/platform/named-credentials/guide/get-started.html)
 - [Populate External Credential Principals](https://developer.salesforce.com/docs/platform/named-credentials/guide/nc-populate-external-credentials.html)
+- [Unsplash API Guidelines](https://help.unsplash.com/en/articles/2511245-unsplash-api-guidelines)
+- [Unsplash: Triggering a Download](https://help.unsplash.com/en/articles/2511258-guideline-triggering-a-download)
 - [LWC Jest Testing](https://developer.salesforce.com/docs/platform/lwc/guide/testing.html)
 - [Apex Row Locking](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_locking_statements.htm)
 - [Summer '26 / API 67.0](https://developer.salesforce.com/blogs/2026/06/the-salesforce-developers-guide-to-the-summer-26-release)

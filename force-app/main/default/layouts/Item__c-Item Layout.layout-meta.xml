@@ -22,6 +22,10 @@
         >AvailableQuantity__c</field></layoutItems>
             <layoutItems><behavior>Edit</behavior><field
         >Image__c</field></layoutItems>
+            <layoutItems><behavior>Readonly</behavior><field
+        >Unsplash_Photographer__c</field></layoutItems>
+            <layoutItems><behavior>Readonly</behavior><field
+        >Unsplash_Profile_URL__c</field></layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>

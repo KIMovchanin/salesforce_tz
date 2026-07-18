@@ -43,9 +43,14 @@
               <tr key={line.itemId}>
                 <th scope="row">
                   <div class="item-cell">
-                    <template lwc:if={line.imageUrl}>
-                      <img src={line.imageUrl} alt="" />
-                    </template>
+                    <c-item-image
+                      class="cart-image"
+                      image-url={line.imageUrl}
+                      alternative-text={line.name}
+                      loading="lazy"
+                      photographer-name={line.photographerName}
+                      photographer-url={line.photographerUrl}
+                    ></c-item-image>
                     <div>
                       <div class="slds-truncate" title={line.name}>
                         {line.name}
@@ -122,19 +127,19 @@
         <p>Add an in-stock item from the catalog.</p>
       </div>
     </template>
-    <div slot="footer" class="footer-actions">
-      <lightning-button
-        label="Continue shopping"
-        variant="neutral"
-        disabled={busy}
-        onclick={handleClose}
-      ></lightning-button>
-      <lightning-button
-        label="Checkout"
-        variant="brand"
-        disabled={checkoutDisabled}
-        onclick={handleCheckout}
-      ></lightning-button>
-    </div>
+    <lightning-button
+      slot="footer"
+      label="Continue shopping"
+      variant="neutral"
+      disabled={busy}
+      onclick={handleClose}
+    ></lightning-button>
+    <lightning-button
+      slot="footer"
+      label="Checkout"
+      variant="brand"
+      disabled={checkoutDisabled}
+      onclick={handleCheckout}
+    ></lightning-button>
   </c-modal-shell>
 </template>

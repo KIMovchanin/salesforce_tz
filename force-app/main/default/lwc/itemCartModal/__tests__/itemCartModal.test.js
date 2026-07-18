@@ -6,6 +6,9 @@ const CART_ITEMS = [
     itemId: "a01000000000001AAA",
     name: "Desk Lamp",
     imageUrl: "https://images.unsplash.com/lamp",
+    photographerName: "Jane Photographer",
+    photographerUrl:
+      "https://unsplash.com/@jane?utm_source=item_purchase_tool&utm_medium=referral",
     price: 25,
     quantity: 2,
     availableQuantity: 3,
@@ -42,6 +45,7 @@ describe("c-item-cart-modal", () => {
       ...element.shadowRoot.querySelectorAll("lightning-button")
     ].find((button) => button.label === "Checkout");
     checkoutButton.click();
+    const image = element.shadowRoot.querySelector("c-item-image");
 
     expect(updateHandler.mock.calls[0][0].detail).toEqual({
       itemId: CART_ITEMS[0].itemId,
@@ -51,6 +55,8 @@ describe("c-item-cart-modal", () => {
       CART_ITEMS[0].itemId
     );
     expect(checkoutHandler).toHaveBeenCalledTimes(1);
+    expect(image.photographerName).toBe(CART_ITEMS[0].photographerName);
+    expect(image.photographerUrl).toBe(CART_ITEMS[0].photographerUrl);
   });
 
   it("blocks checkout for a stale quantity", () => {

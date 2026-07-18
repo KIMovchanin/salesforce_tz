@@ -14,13 +14,16 @@ public with sharing class ItemCreationService {
     }
 
     validate(name, description, type, family, price, availableQuantity);
-    String imageUrl = UnsplashClient.findImageUrl(name.trim());
+    UnsplashClient.Photo photo = UnsplashClient.findPhoto(name.trim());
+    UnsplashClient.trackDownload(photo);
     Item__c item = new Item__c(
       Name = name.trim(),
       Description__c = String.isBlank(description) ? null : description.trim(),
       Type__c = type,
       Family__c = family,
-      Image__c = imageUrl,
+      Image__c = photo.imageUrl,
+      Unsplash_Photographer__c = photo.photographerName,
+      Unsplash_Profile_URL__c = photo.photographerUrl,
       Price__c = price,
       AvailableQuantity__c = availableQuantity
     );

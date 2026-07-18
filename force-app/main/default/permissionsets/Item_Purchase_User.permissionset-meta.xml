@@ -19,9 +19,19 @@
     <description
   >Access to browse items and create purchases from the Item Purchase Tool.</description>
     <fieldPermissions><editable>false</editable><field
+    >Account.AccountNumber</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >Account.Industry</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
     >Item__c.Description__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field
     >Item__c.Image__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >Item__c.Unsplash_Photographer__c</field><readable
+    >true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field
+    >Item__c.Unsplash_Profile_URL__c</field><readable
+    >true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field
     >PurchaseLine__c.LineTotal__c</field><readable
     >true</readable></fieldPermissions>

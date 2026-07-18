@@ -1,5 +1,7 @@
 @IsTest
 public class PurchaseTestFactory {
+  private static Id cachedProfileId;
+
   public static Account createAccount(String label) {
     Account account = new Account(Name = 'Test Account ' + label);
     Database.insert(account, AccessLevel.SYSTEM_MODE);
@@ -86,7 +88,7 @@ public class PurchaseTestFactory {
       LanguageLocaleKey = 'en_US',
       LastName = 'Purchase Tool ' + label,
       LocaleSidKey = 'en_US',
-      ProfileId = UserInfo.getProfileId(),
+      ProfileId = applicationUserProfileId(),
       TimeZoneSidKey = 'America/Los_Angeles',
       UserName = 'user.' + unique + '@example.com'
     );
@@ -131,5 +133,29 @@ public class PurchaseTestFactory {
       values.add(value);
     }
     return String.join(values, '');
+  }
+
+  private static Id applicationUserProfileId() {
+    if (cachedProfileId != null) {
+      return cachedProfileId;
+    }
+    List<Profile> profiles = [
+      SELECT Id, Name
+      FROM Profile
+      WHERE Name IN ('Minimum Access - Salesforce', 'Standard User')
+      WITH SYSTEM_MODE
+    ];
+    for (Profile profile : profiles) {
+      if (profile.Name == 'Minimum Access - Salesforce') {
+        cachedProfileId = profile.Id;
+        return cachedProfileId;
+      }
+    }
+    System.Assert.isFalse(
+      profiles.isEmpty(),
+      'A Salesforce application user profile must exist.'
+    );
+    cachedProfileId = profiles[0].Id;
+    return cachedProfileId;
   }
 }

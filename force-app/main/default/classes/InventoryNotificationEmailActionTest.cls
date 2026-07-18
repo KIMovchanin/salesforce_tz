@@ -114,10 +114,11 @@ private class InventoryNotificationEmailActionTest {
   }
 
   @IsTest
-  static void outOfStockFlowSendsEmailOnTheZeroQuantityTransition() {
+  static void outOfStockFlowRunsNotificationAndEmailBranches() {
     Database.insert(
       new Inventory_Notification_Settings__c(
         SetupOwnerId = UserInfo.getOrganizationId(),
+        Recipient_User__c = String.valueOf(UserInfo.getUserId()),
         Recipient_Email__c = 'inventory@example.com'
       ),
       AccessLevel.SYSTEM_MODE

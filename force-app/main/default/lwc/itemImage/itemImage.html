@@ -1,6 +1,20 @@
 <template>
   <template lwc:if={hasImage}>
-    <img src={imageUrl} alt={alternativeText} loading={loading} />
+    <div class="image-frame">
+      <img src={imageUrl} alt={alternativeText} loading={loading} />
+    </div>
+    <template lwc:if={isUnsplashImage}>
+      <p class="attribution">
+        Photo by
+        <a href={photographerLink} target="_blank" rel="noopener noreferrer"
+          >{photographerName}</a
+        >
+        on
+        <a href={unsplashUrl} target="_blank" rel="noopener noreferrer"
+          >Unsplash</a
+        >
+      </p>
+    </template>
   </template>
   <template lwc:else>
     <div class="placeholder">
