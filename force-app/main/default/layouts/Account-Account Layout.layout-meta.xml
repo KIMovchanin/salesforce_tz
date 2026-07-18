@@ -40,8 +40,6 @@
     </layoutSections>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>Purchase__c.TotalItems__c</fields>
-        <fields>Purchase__c.GrandTotal__c</fields>
         <relatedList>Purchase__c.ClientId__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>

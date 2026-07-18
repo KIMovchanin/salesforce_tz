@@ -23,14 +23,6 @@
     <fieldPermissions><editable>false</editable><field
     >Item__c.Image__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field
-    >Purchase__c.ClientId__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field
-    >Purchase__c.GrandTotal__c</field><readable
-    >true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field
-    >Purchase__c.TotalItems__c</field><readable
-    >true</readable></fieldPermissions>
-    <fieldPermissions><editable>false</editable><field
     >PurchaseLine__c.LineTotal__c</field><readable
     >true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field
