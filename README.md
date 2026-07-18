@@ -381,7 +381,7 @@ GitHub Actions запускает install, formatting check, ESLint и Jest пр
 | Admin `dev@truesolv.com`           | Создан и настроен                                                                                                   |
 | Demo data                          | `Demo Customer` и четыре Item созданы; авторы и профильные URL Unsplash проверены и заполнены                       |
 | Unmanaged package installation URL | Версия 1.2 относится к предыдущему snapshot; текущий deployment в неё не входит                                     |
-| Unsplash Access Key                | Настроен в Dev Org; серверный callout к Unsplash успешно проверен                                                    |
+| Unsplash Access Key                | Настроен в Dev Org; серверный callout к Unsplash успешно проверен                                                   |
 
 ## Unmanaged package
 
