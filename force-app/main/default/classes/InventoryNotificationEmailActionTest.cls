@@ -57,6 +57,7 @@ private class InventoryNotificationEmailActionTest {
 
   @IsTest
   static void reportsUnavailableTemplateForAValidRequest() {
+    InventoryNotificationEmailAction.templateDeveloperName = 'Missing_Out_Of_Stock_Template';
     InventoryNotificationEmailAction.Request request = emailRequest(
       emailItem().Id,
       null,

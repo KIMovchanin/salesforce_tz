@@ -1,5 +1,6 @@
 public with sharing class InventoryNotificationEmailAction {
-  private static final String TEMPLATE_DEVELOPER_NAME = 'Out_of_Stock_Alert';
+  @TestVisible
+  private static String templateDeveloperName = 'Out_of_Stock_Alert';
 
   @InvocableMethod(label='Send Out of Stock Email')
   public static List<Result> send(List<Request> requests) {
@@ -96,7 +97,7 @@ public with sharing class InventoryNotificationEmailAction {
     List<EmailTemplate> templates = [
       SELECT Id
       FROM EmailTemplate
-      WHERE DeveloperName = :TEMPLATE_DEVELOPER_NAME
+      WHERE DeveloperName = :templateDeveloperName
       WITH SYSTEM_MODE
       LIMIT 1
     ];
