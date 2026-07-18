@@ -79,7 +79,6 @@ private class InventoryNotificationEmailActionTest {
 
   @IsTest
   static void rendersAndSendsForEverySupportedRecipientIdForm() {
-    createTestTemplate();
     Item__c item = emailItem();
     Account account = [
       SELECT Id
@@ -116,7 +115,6 @@ private class InventoryNotificationEmailActionTest {
 
   @IsTest
   static void outOfStockFlowSendsEmailOnTheZeroQuantityTransition() {
-    createTestTemplate();
     Database.insert(
       new Inventory_Notification_Settings__c(
         SetupOwnerId = UserInfo.getOrganizationId(),
@@ -155,7 +153,6 @@ private class InventoryNotificationEmailActionTest {
 
   @IsTest
   static void invalidBellRecipientFallsBackToEmailWithoutBlockingStock() {
-    createTestTemplate();
     Database.insert(
       new Inventory_Notification_Settings__c(
         SetupOwnerId = UserInfo.getOrganizationId(),
@@ -205,19 +202,5 @@ private class InventoryNotificationEmailActionTest {
     request.recipientUserId = recipientUserId;
     request.recipientEmail = recipientEmail;
     return request;
-  }
-
-  private static void createTestTemplate() {
-    EmailTemplate template = new EmailTemplate(
-      Body = 'An inventory item is out of stock.',
-      DeveloperName = 'Out_of_Stock_Alert',
-      Encoding = 'UTF-8',
-      FolderId = UserInfo.getUserId(),
-      IsActive = true,
-      Name = 'Out of Stock Alert Test',
-      Subject = 'Out of Stock Alert',
-      TemplateType = 'text'
-    );
-    Database.insert(template, AccessLevel.SYSTEM_MODE);
   }
 }
